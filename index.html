@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Written by build.py from wedding.json. Edit the JSON, not this. -->
+<!-- meta:start -->
+<title>Joyal Joy Madeckal &amp; Anjana Raju — 31 Oct 2026 · 01 Nov 2026</title>
+<meta name="description" content="Joyal Joy Madeckal and Anjana Raju invite you to their ring exchange and their wedding. Details and RSVP.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Joyal Joy Madeckal &amp; Anjana Raju are getting married">
+<meta property="og:description" content="Joyal Joy Madeckal and Anjana Raju invite you to their ring exchange and their wedding. Details and RSVP.">
+<meta property="og:image" content="https://joyaljoymadeckal.github.io/wedding/photos/share.jpg">
+<meta property="og:url" content="https://joyaljoymadeckal.github.io/wedding">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#171522">
+<!-- meta:end -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Karla:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* palette as given — these five are FILLS, not text colours */
+  --sage:#98A086;
+  --rose:#A76D5E;
+  --tan:#C4A071;
+  --beige:#DFCCB1;
+  --terracotta:#846044;
+
+  /* darkened siblings, for anything that carries text */
+  --sage-deep:#5F6B52;
+  --rose-deep:#7E4E42;
+  --tan-deep:#8A6B41;
+  --terracotta-deep:#5E4430;
+
+  /* neutrals */
+  --paper:#FAF5EC;
+  --paper-warm:#F2E9DA;
+  --ink:#3A2C22;
+  --muted:#786250;
+  --hairline:#E0D2BE;
+
+  --display:"Gilda Display","Hoefler Text",Georgia,serif;
+  --text:"Karla","Helvetica Neue",Arial,sans-serif;
+
+  --stage-w:44%;
+  --pad:clamp(1.5rem,5vw,3.5rem);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--text);
+  font-weight:300;
+  font-size:1.0625rem;
+  line-height:1.7;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+
+/* ══ LEFT: the photo stage ══════════════════════════════════ */
+.stage{
+  position:relative;
+  height:62svh;
+  min-height:20rem;
+  background:var(--terracotta);
+  overflow:hidden;
+  isolation:isolate;
+}
+.slides{position:absolute;inset:0}
+.slides picture{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease}
+.slides picture.is-active{opacity:1}
+.slides img{width:100%;height:100%;object-fit:cover}
+@media (prefers-reduced-motion:reduce){.slides picture{transition:none}}
+
+.scrim{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,
+    rgba(58,44,34,.82) 0%, rgba(58,44,34,.45) 34%, rgba(58,44,34,.06) 62%);
+  pointer-events:none;
+}
+
+.plate{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  padding:var(--pad);
+  color:var(--paper);
+  text-align:center;
+}
+.plate .preamble{
+  font-size:.8125rem;font-style:italic;
+  color:rgba(250,245,236,.82);margin:0 0 .5rem;
+}
+.plate .names{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(2.1rem,6.4vw,3.6rem);
+  line-height:1.12;
+  margin:0;
+  text-wrap:balance;
+}
+.plate .joiner{
+  display:block;font-size:.4em;font-style:italic;
+  color:var(--tan);margin:.22em 0;
+}
+.plate .dates{
+  margin:.9rem 0 0;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(250,245,236,.88);
+}
+.plate .dates span{white-space:nowrap}
+.plate .dates i{font-style:normal;color:var(--tan);margin:0 .5em}
+
+.stagedots{
+  position:absolute;top:1.1rem;right:1.1rem;
+  display:flex;gap:.4rem;z-index:2;
+}
+.sdot{
+  width:6px;height:6px;padding:0;border:0;border-radius:50%;
+  background:rgba(250,245,236,.45);cursor:pointer;
+}
+.sdot[aria-current="true"]{background:var(--paper)}
+.sdot:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+
+/* ══ RIGHT: the scrolling detail column ═════════════════════ */
+.detail{background:var(--paper)}
+.inner{max-width:34rem;margin:0 auto;padding:0 var(--pad) 4rem}
+
+.jump{
+  position:sticky;top:0;z-index:5;
+  display:flex;gap:.25rem;overflow-x:auto;
+  padding:.7rem var(--pad);
+  background:rgba(250,245,236,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--hairline);
+  scrollbar-width:none;
+}
+.jump::-webkit-scrollbar{display:none}
+.jump a{
+  flex:0 0 auto;
+  font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  padding:.42rem .7rem;border-radius:999px;white-space:nowrap;
+}
+.jump a:hover{color:var(--ink);background:var(--paper-warm)}
+.jump a:focus-visible{outline:2px solid var(--terracotta);outline-offset:2px}
+
+section{scroll-margin-top:4rem}
+
+h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.18}
+p{margin:0 0 .85rem}
+p:last-child{margin-bottom:0}
+
+.opening{padding-top:2.75rem}
+.opening p{color:var(--muted);font-size:1rem;max-width:44ch}
+.opening .lead{
+  font-family:var(--display);font-size:1.35rem;line-height:1.5;
+  color:var(--ink);margin-bottom:1rem;
+}
+
+.countdown{
+  margin-top:1.5rem;padding-top:1.25rem;
+  border-top:1px solid var(--hairline);
+  font-size:.8125rem;letter-spacing:.05em;color:var(--muted);
+}
+
+/* ── event cards ────────────────────────────────────────── */
+.fn{
+  margin-top:2.5rem;
+  background:var(--paper-warm);
+  border-radius:2px;
+  border-left:4px solid var(--accent,var(--terracotta));
+  overflow:hidden;
+}
+.fn-body{padding:clamp(1.4rem,4vw,2rem)}
+.fn-kicker{
+  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent-deep,var(--terracotta-deep));margin:0 0 .35rem;
+}
+.fn h2{font-size:clamp(1.6rem,5vw,2.1rem);margin-bottom:.3rem}
+.fn .tagline{font-style:italic;color:var(--muted);font-size:.9375rem;margin:0 0 1.1rem}
+
+.fn-when{
+  font-family:var(--display);
+  font-size:1.0625rem;
+  color:var(--accent-deep,var(--terracotta-deep));
+  margin:0 0 .15rem;
+}
+.fn-time{font-size:.9375rem;color:var(--muted);margin:0 0 1rem}
+
+.fn-where{font-size:.9375rem;color:var(--muted);margin:0 0 .5rem}
+.fn-where:last-of-type{margin-bottom:0}
+.fn-where strong{font-weight:500;color:var(--ink)}
+
+.fn-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:1.1rem 0 0}
+.tag{
+  font-size:.75rem;letter-spacing:.03em;
+  background:var(--paper);border:1px solid var(--hairline);
+  color:var(--muted);border-radius:999px;padding:.28rem .75rem;
+}
+
+.maplink{
+  display:inline-block;margin-top:1rem;font-size:.875rem;
+  color:var(--accent-deep,var(--terracotta-deep));
+  text-decoration-color:var(--accent,var(--tan));text-underline-offset:.28em;
+}
+
+.arch{
+  position:relative;overflow:hidden;background:var(--beige);
+  aspect-ratio:16/10;
+}
+.fn .arch{border-bottom:4px solid var(--accent,var(--terracotta))}
+
+/* ── shared details ─────────────────────────────────────── */
+.facts{margin:1.5rem 0 0;border-top:1px solid var(--hairline)}
+.facts>div{
+  display:grid;gap:.1rem .9rem;
+  padding:1.1rem 0;border-bottom:1px solid var(--hairline);
+}
+.facts dt{font-family:var(--display);font-size:1.0625rem;margin:0}
+.facts dd{margin:0;color:var(--muted);font-size:.9375rem}
+@media (min-width:30rem){
+  .facts>div{grid-template-columns:9.5rem 1fr}
+}
+
+.section-head{margin-top:3.25rem}
+.section-head h2{font-size:clamp(1.5rem,4.6vw,1.9rem);margin-bottom:.45rem}
+.section-head>p{color:var(--muted);font-size:.9375rem;max-width:46ch}
+
+/* ── RSVP ───────────────────────────────────────────────── */
+.rsvp-fn{
+  margin-top:1.5rem;padding:1.15rem 1.25rem;
+  background:var(--paper-warm);border-radius:2px;
+  border-left:4px solid var(--accent,var(--terracotta));
+}
+.rsvp-fn h3{font-size:1.2rem;margin:0}
+.rsvp-fn .sub{font-size:.8125rem;color:var(--muted);margin:0 0 .85rem}
+
+.choices{display:flex;flex-wrap:wrap;gap:.5rem}
+.choice{
+  flex:1 1 8rem;
+  display:flex;align-items:center;gap:.5rem;
+  border:1px solid var(--hairline);background:var(--paper);
+  border-radius:2px;padding:.65rem .85rem;
+  font-size:.9375rem;cursor:pointer;
+}
+.choice input{accent-color:var(--accent-deep,var(--terracotta-deep));margin:0}
+.choice:has(input:checked){
+  border-color:var(--accent-deep,var(--terracotta-deep));
+  background:color-mix(in srgb,var(--accent,var(--terracotta)) 14%,var(--paper));
+}
+.choice:has(input:focus-visible){outline:2px solid var(--terracotta);outline-offset:2px}
+
+.headcount{margin-top:.75rem;display:flex;align-items:center;gap:.75rem}
+.headcount label{font-size:.8125rem;color:var(--muted);margin:0}
+.headcount input{width:4.5rem}
+
+.field{margin-top:1.35rem}
+.field label,.headcount label{display:block}
+.field label{
+  font-size:.8125rem;letter-spacing:.03em;
+  color:var(--muted);margin-bottom:.35rem;
+}
+input[type=text],input[type=email],input[type=number],textarea{
+  width:100%;font-family:var(--text);font-size:1rem;font-weight:300;
+  color:var(--ink);background:transparent;border:0;
+  border-bottom:1px solid var(--hairline);padding:.5rem 0;border-radius:0;
+}
+textarea{min-height:5rem;resize:vertical}
+input:focus-visible,textarea:focus-visible{
+  outline:none;border-bottom-color:var(--terracotta);
+  box-shadow:0 1px 0 var(--terracotta);
+}
+fieldset{border:0;padding:0;margin:0}
+legend{padding:0}
+
+.btn{
+  display:inline-block;margin-top:1.75rem;
+  font-family:var(--text);font-size:.78rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--paper);background:var(--terracotta);
+  border:0;border-radius:2px;padding:1rem 2.25rem;
+  cursor:pointer;text-decoration:none;
+}
+.btn:hover{background:var(--terracotta-deep)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.btn[disabled]{opacity:.55;cursor:progress}
+
+.formnote{margin-top:.9rem;font-size:.8125rem;color:var(--muted)}
+.formstatus{margin-top:.9rem;font-size:.9375rem;color:var(--terracotta-deep);min-height:1.5em}
+.honeypot{position:absolute;left:-9999px}
+
+/* ── footer ─────────────────────────────────────────────── */
+.foot{
+  margin-top:3.5rem;padding-top:1.75rem;
+  border-top:1px solid var(--hairline);
+  font-size:.8125rem;color:var(--muted);text-align:center;
+}
+.foot a{text-underline-offset:.25em}
+.foot .mark{
+  font-family:var(--display);font-size:1rem;
+  color:var(--ink);margin-top:.75rem;
+}
+
+.boot{padding:5rem var(--pad);text-align:center;color:var(--muted);font-size:.9375rem}
+.boot code{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--terracotta-deep)}
+
+/* ══ DESKTOP: pin the photos, scroll the details ════════════ */
+@media (min-width:60rem){
+  .stage{
+    position:fixed;top:0;left:0;bottom:0;
+    width:var(--stage-w);height:auto;min-height:0;
+  }
+  .detail{margin-left:var(--stage-w);min-height:100vh}
+  .plate{padding:2.5rem}
+  .plate .names{font-size:clamp(2.4rem,3.6vw,3.4rem)}
+  .opening{padding-top:3.5rem}
+}
+@media (min-width:90rem){
+  :root{--stage-w:46%}
+  .inner{max-width:36rem}
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .plate{animation:rise 1s cubic-bezier(.2,.7,.3,1) .15s both}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+}
+
+@media print{
+  .stage,.jump,form{display:none}
+  .detail{margin-left:0}
+  body{background:#fff}
+}
+</style>
+</head>
+
+<body>
+<div id="app"><p class="boot" id="boot">Loading…</p></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   Renders wedding.json + photos.json.
+   All content and colour lives in the JSON, not here.
+   ═══════════════════════════════════════════════════════════ */
+
+const PLACEHOLDER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'%3E" +
+  "%3Crect width='800' height='1000' fill='%23DFCCB1'/%3E%3Ctext x='400' y='512' " +
+  "font-family='Georgia,serif' font-size='34' fill='%23846044' text-anchor='middle'%3EPhoto%3C/text%3E%3C/svg%3E";
+
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+
+/* escape first, then allow **bold**, *italic*, [text](url), newlines */
+function rich(node, str) {
+  if (!str) { node.textContent = ""; return node; }
+  node.innerHTML = String(str)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+|mailto:[^)\s]+|tel:[^)\s]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+    .replace(/\n/g, "<br>");
+  return node;
+}
+
+const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/* ── slideshow ─────────────────────────────────────────── */
+function slideshow(frame, photos, opts) {
+  const { interval = 6000, dots = false } = opts || {};
+  const list = photos && photos.length ? photos : [{ jpg: PLACEHOLDER, alt: "" }];
+  const stage = el("div", "slides");
+
+  const layers = list.map((p, i) => {
+    const pic = el("picture");
+    if (p.webp) { const s = el("source"); s.srcset = p.webp; s.type = "image/webp"; pic.append(s); }
+    const img = el("img");
+    img.src = p.jpg; img.alt = p.alt || "";
+    img.loading = i < 2 ? "eager" : "lazy"; img.decoding = "async";
+    img.onerror = () => { img.onerror = null; img.src = PLACEHOLDER; };
+    pic.append(img);
+    if (i === 0) pic.classList.add("is-active");
+    stage.append(pic);
+    return pic;
+  });
+  frame.append(stage);
+  if (list.length < 2) return;
+
+  const reduce = !!(window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  let index = 0, timer = null, paused = false, dotEls = [];
+
+  const show = n => {
+    index = (n + layers.length) % layers.length;
+    layers.forEach((p, i) => p.classList.toggle("is-active", i === index));
+    dotEls.forEach((d, i) => d.setAttribute("aria-current", String(i === index)));
+  };
+  const start = () => { if (!reduce && !paused && !timer) timer = setInterval(() => show(index + 1), interval); };
+  const stop = () => { clearInterval(timer); timer = null; };
+
+  if (dots) {
+    const wrap = el("div", "stagedots");
+    dotEls = list.map((_, i) => {
+      const d = el("button", "sdot"); d.type = "button";
+      d.setAttribute("aria-label", "Photo " + (i + 1) + " of " + list.length);
+      d.onclick = () => { stop(); show(i); start(); };
+      wrap.append(d); return d;
+    });
+    frame.append(wrap);
+  }
+
+  let x0 = null;
+  frame.addEventListener("pointerdown", e => { x0 = e.clientX; });
+  frame.addEventListener("pointerup", e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { stop(); show(index + (dx < 0 ? 1 : -1)); start(); }
+  });
+  frame.addEventListener("mouseenter", () => { paused = true; stop(); });
+  frame.addEventListener("mouseleave", () => { paused = false; start(); });
+  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+
+  show(0); start();
+}
+
+/* ── accent colour per event ───────────────────────────── */
+function accentVars(node, name) {
+  const known = ["sage", "rose", "tan", "terracotta"];
+  const key = known.indexOf(name) >= 0 ? name : "terracotta";
+  node.style.setProperty("--accent", "var(--" + key + ")");
+  node.style.setProperty("--accent-deep", "var(--" + key + "-deep)");
+}
+
+/* ── left panel ────────────────────────────────────────── */
+function buildStage(data, photos, fns) {
+  const stage = el("aside", "stage");
+  slideshow(stage, photos, { interval: (data.stage && data.stage.slideSeconds || 6) * 1000, dots: true });
+  stage.append(el("div", "scrim"));
+
+  const plate = el("div", "plate");
+  const inv = data.invitation || {};
+  if (inv.preamble) plate.append(rich(el("p", "preamble"), inv.preamble));
+
+  const h1 = el("h1", "names");
+  h1.append(document.createTextNode(data.couple.partnerOne + " "));
+  h1.append(el("span", "joiner", data.couple.joiner || "and"));
+  h1.append(document.createTextNode(" " + data.couple.partnerTwo));
+  plate.append(h1);
+
+  if (fns.length) {
+    const d = el("p", "dates");
+    fns.forEach((f, i) => {
+      if (i) d.append(el("i", null, " · "));
+      d.append(el("span", null, f.shortDate || f.dateLabel || ""));
+    });
+    plate.append(d);
+  }
+  stage.append(plate);
+  return stage;
+}
+
+/* ── jump nav ──────────────────────────────────────────── */
+function buildJump(fns, data) {
+  const nav = el("nav", "jump");
+  nav.setAttribute("aria-label", "Sections");
+  fns.forEach(f => {
+    const a = el("a", null, f.navLabel || f.name);
+    a.href = "#" + slug(f.id || f.name);
+    nav.append(a);
+  });
+  if (data.details) {
+    const a = el("a", null, data.details.navLabel || "Good to know");
+    a.href = "#details"; nav.append(a);
+  }
+  if (data.rsvp) {
+    const a = el("a", null, data.rsvp.navLabel || "RSVP");
+    a.href = "#rsvp"; nav.append(a);
+  }
+  return nav;
+}
+
+/* ── opening ───────────────────────────────────────────── */
+function buildOpening(data, fns) {
+  const s = el("section", "opening");
+  const inv = data.invitation || {};
+  if (inv.lead) s.append(rich(el("p", "lead"), inv.lead));
+  if (inv.body) s.append(rich(el("p"), inv.body));
+  const c = countdown(fns);
+  if (c) s.append(el("p", "countdown", c));
+  return s;
+}
+
+function countdown(fns) {
+  const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const today = midnight(new Date());
+  const upcoming = fns
+    .map(f => ({ f: f, d: new Date(f.date) }))
+    .filter(x => !isNaN(x.d) && midnight(x.d) >= today)
+    .sort((a, b) => a.d - b.d)[0];
+  if (!upcoming) return fns.length ? "Thank you for celebrating with us" : "";
+  const days = Math.round((midnight(upcoming.d) - today) / 86400000);
+  const what = (upcoming.f.countdownLabel || upcoming.f.name).toLowerCase();
+  if (days === 0) return "Today — the " + what;
+  if (days === 1) return "Tomorrow — the " + what;
+  return days + " days until the " + what;
+}
+
+/* ── one event card ────────────────────────────────────── */
+function buildFunction(fn, photos) {
+  const s = el("section", "fn");
+  s.id = slug(fn.id || fn.name);
+  accentVars(s, fn.accent);
+
+  const tag = fn.photoTag !== undefined ? fn.photoTag : fn.id;
+  const pics = photos.filter(p => p.tag === tag);
+  if (pics.length) {
+    const arch = el("div", "arch");
+    slideshow(arch, pics, { interval: (fn.slideSeconds || 7) * 1000 });
+    s.append(arch);
+  }
+
+  const b = el("div", "fn-body");
+  if (fn.kicker) b.append(el("p", "fn-kicker", fn.kicker));
+  b.append(el("h2", null, fn.name));
+  if (fn.tagline) b.append(rich(el("p", "tagline"), fn.tagline));
+  if (fn.dateLabel) b.append(el("p", "fn-when", fn.dateLabel));
+  if (fn.time) b.append(el("p", "fn-time", fn.time));
+
+  if (fn.venue || fn.address) {
+    const w = el("p", "fn-where");
+    if (fn.venue) { w.append(el("strong", null, fn.venue)); w.append(el("br")); }
+    if (fn.address) w.append(document.createTextNode(fn.address));
+    b.append(w);
+  }
+  if (fn.note) b.append(rich(el("p", "fn-where"), fn.note));
+
+  if (fn.tags && fn.tags.length) {
+    const t = el("div", "fn-tags");
+    fn.tags.forEach(x => t.append(el("span", "tag", x)));
+    b.append(t);
+  }
+  if (fn.mapUrl) {
+    const a = el("a", "maplink", fn.mapLabel || "Open in Maps");
+    a.href = fn.mapUrl; a.rel = "noopener";
+    b.append(a);
+  }
+  s.append(b);
+  return s;
+}
+
+/* ── shared details ────────────────────────────────────── */
+function buildDetails(d) {
+  const s = el("section", "section-head");
+  s.id = "details";
+  s.append(el("h2", null, d.title || "Good to know"));
+  if (d.intro) s.append(rich(el("p"), d.intro));
+  const dl = el("dl", "facts");
+  (d.items || []).forEach(it => {
+    const row = el("div");
+    row.append(el("dt", null, it.term));
+    row.append(rich(el("dd"), it.description));
+    dl.append(row);
+  });
+  s.append(dl);
+  return s;
+}
+
+/* ── RSVP, one block per event ─────────────────────────── */
+function buildRsvp(r, fns) {
+  const s = el("section", "section-head");
+  s.id = "rsvp";
+  s.append(el("h2", null, r.title || "Will you join us?"));
+  if (r.intro) s.append(rich(el("p"), r.intro));
+
+  const L = r.labels || {};
+  const form = el("form");
+  form.id = "rsvpForm"; form.name = "rsvp"; form.method = "POST";
+  if ((r.mode || "netlify") === "netlify") {
+    form.setAttribute("data-netlify", "true");
+    form.setAttribute("netlify-honeypot", "bot-field");
+    const hid = el("input"); hid.type = "hidden"; hid.name = "form-name"; hid.value = "rsvp";
+    form.append(hid);
+  }
+  const hp = el("p", "honeypot");
+  hp.innerHTML = '<label>Leave this empty <input name="bot-field" tabindex="-1"></label>';
+  form.append(hp);
+
+  const textField = (id, name, label, type, req, attrs) => {
+    const f = el("div", "field");
+    const l = el("label", null, label); l.htmlFor = id;
+    const i = type === "textarea" ? el("textarea") : el("input");
+    if (type !== "textarea") i.type = type || "text";
+    i.id = id; i.name = name; i.required = !!req;
+    if (attrs) Object.assign(i, attrs);
+    f.append(l, i);
+    return f;
+  };
+
+  form.append(textField("gName", "name", L.name || "Your name", "text", true, { autocomplete: "name" }));
+  form.append(textField("gEmail", "email", L.email || "Email", "email", true, { autocomplete: "email" }));
+
+  fns.forEach(fn => {
+    const key = slug(fn.id || fn.name);
+    const block = el("div", "rsvp-fn");
+    accentVars(block, fn.accent);
+
+    const fs = el("fieldset");
+    const lg = el("legend");
+    lg.append(el("h3", null, fn.name));
+    fs.append(lg);
+    fs.append(el("p", "sub", [fn.shortDate || fn.dateLabel, fn.venue].filter(Boolean).join(" · ")));
+
+    const ch = el("div", "choices");
+    [[L.yes || "Joyfully yes", "yes"], [L.no || "Sadly no", "no"]].forEach((pair, i) => {
+      const lab = el("label", "choice");
+      const inp = el("input");
+      inp.type = "radio"; inp.name = key + "_attending"; inp.value = pair[1];
+      inp.required = i === 0;
+      lab.append(inp, document.createTextNode(" " + pair[0]));
+      ch.append(lab);
+    });
+    fs.append(ch);
+
+    const hc = el("div", "headcount");
+    const hl = el("label", null, L.headcount || "How many of you?");
+    hl.htmlFor = key + "_guests";
+    const hi = el("input");
+    hi.type = "number"; hi.id = key + "_guests"; hi.name = key + "_guests";
+    hi.min = 0; hi.max = 12; hi.value = 1;
+    hc.append(hl, hi);
+    fs.append(hc);
+
+    // dim the headcount once they've said no
+    ch.addEventListener("change", e => {
+      const no = e.target.value === "no";
+      hi.disabled = no;
+      if (no) hi.value = 0;
+      else if (Number(hi.value) === 0) hi.value = 1;
+      hc.style.opacity = no ? ".45" : "1";
+    });
+
+    block.append(fs);
+    form.append(block);
+  });
+
+  form.append(textField("gDiet", "dietary", L.dietary || "Anything you can't eat?"));
+  form.append(textField("gSong", "song", L.song || "A song that will get you dancing"));
+  form.append(textField("gNote", "message", L.message || "A note for us", "textarea"));
+
+  const btn = el("button", "btn", L.submit || "Send reply");
+  btn.type = "submit";
+  form.append(btn);
+
+  const status = el("p", "formstatus");
+  status.id = "formStatus";
+  status.setAttribute("role", "status");
+  status.setAttribute("aria-live", "polite");
+  form.append(status);
+  if (r.note) form.append(rich(el("p", "formnote"), r.note));
+
+  wireForm(form, status, btn, r);
+  s.append(form);
+  return s;
+}
+
+function wireForm(form, status, btn, r) {
+  const mode = r.mode || "netlify";
+  if (mode === "none") return;
+
+  const endpoints = {
+    formspree: r.formspreeEndpoint,
+    gsheet: r.sheetEndpoint,
+    netlify: "/"
+  };
+  const endpoint = endpoints[mode] || "/";
+  const msg = r.messages || {};
+
+  if ((mode === "formspree" || mode === "gsheet") &&
+      (!endpoint || /PLACEHOLDER/.test(endpoint))) {
+    console.warn("RSVP: rsvp." + (mode === "gsheet" ? "sheetEndpoint" : "formspreeEndpoint") +
+                 " is not set in wedding.json — replies will go nowhere.");
+  }
+
+  /* Google Apps Script accepts a urlencoded POST without a CORS preflight.
+     If the browser still blocks reading the response, resend opaquely — the
+     row lands in the sheet either way, we just can't see the confirmation. */
+  async function send(body) {
+    if (mode !== "gsheet") {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: mode === "formspree" ? { Accept: "application/json" } : {},
+        body: mode === "formspree" ? body.fd : body.qs
+      });
+      if (!res.ok) throw new Error(res.status);
+      return;
+    }
+    try {
+      const res = await fetch(endpoint, { method: "POST", body: body.qs, redirect: "follow" });
+      if (!res.ok) throw new Error(res.status);
+    } catch (err) {
+      await fetch(endpoint, { method: "POST", mode: "no-cors", body: body.qs });
+    }
+  }
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    btn.disabled = true;
+    status.textContent = msg.sending || "Sending…";
+    try {
+      const fd = new FormData(form);
+      if (mode === "gsheet") fd.append("submittedAt", new Date().toISOString());
+      await send({ fd, qs: new URLSearchParams(fd) });
+      form.reset();
+      form.querySelectorAll("input[type=number]").forEach(i => {
+        i.disabled = false;
+        i.closest(".headcount") && (i.closest(".headcount").style.opacity = "1");
+      });
+      status.textContent = msg.sent || "Thank you — we've got your reply.";
+    } catch (err) {
+      status.textContent = msg.failed ||
+        "That didn't send. Please email us instead and we'll add you by hand.";
+    }
+    btn.disabled = false;
+  });
+}
+
+function buildFooter(data) {
+  const f = el("footer", "foot");
+  (data.contacts || []).forEach(c => {
+    const bits = [];
+    if (c.name) bits.push(c.name);
+    if (c.phone) bits.push("[" + c.phone + "](tel:" + c.phone.replace(/[^\d+]/g, "") + ")");
+    if (c.email) bits.push("[" + c.email + "](mailto:" + c.email + ")");
+    f.append(rich(el("p"), bits.join(" · ")));
+  });
+  f.append(el("p", "mark", data.couple.partnerOne + " & " + data.couple.partnerTwo));
+  return f;
+}
+
+function applyTheme(t) {
+  if (!t) return;
+  const map = {
+    sage: "--sage", rose: "--rose", tan: "--tan", beige: "--beige",
+    terracotta: "--terracotta", sageDeep: "--sage-deep", roseDeep: "--rose-deep",
+    tanDeep: "--tan-deep", terracottaDeep: "--terracotta-deep",
+    paper: "--paper", paperWarm: "--paper-warm", ink: "--ink",
+    muted: "--muted", hairline: "--hairline"
+  };
+  Object.keys(map).forEach(k => {
+    if (t[k]) document.documentElement.style.setProperty(map[k], t[k]);
+  });
+}
+
+/* ── boot ──────────────────────────────────────────────── */
+(async function () {
+  const app = document.getElementById("app");
+  const boot = document.getElementById("boot");
+
+  const load = async (url, optional) => {
+    const res = await fetch(url + "?v=" + Date.now());
+    if (!res.ok) {
+      if (optional) return null;
+      throw new Error(url + " returned " + res.status);
+    }
+    return res.json();
+  };
+
+  let data, photoData;
+  try {
+    data = await load("wedding.json");
+    photoData = await load("photos.json", true);
+  } catch (err) {
+    boot.innerHTML = location.protocol === "file:"
+      ? "This page reads its content from JSON, which browsers block on <code>file://</code>.<br>" +
+        "Run <code>python build.py --serve</code> in this folder, then open <code>http://localhost:8000</code>."
+      : "Couldn't load <code>wedding.json</code>. Check it sits next to this file and that the JSON is valid." +
+        "<br><small>" + err.message + "</small>";
+    return;
+  }
+
+  const allPhotos = (photoData && photoData.photos) || [];
+  applyTheme(data.theme);
+  if (data.site && data.site.lang) document.documentElement.lang = data.site.lang;
+
+  // ?for=ring — show only that event, so you can send a different link per guest group
+  const wanted = new URLSearchParams(location.search).get("for");
+  let fns = data.functions || [];
+  if (wanted) {
+    const keep = wanted.split(",").map(x => x.trim().toLowerCase());
+    const subset = fns.filter(f => keep.indexOf(String(f.id).toLowerCase()) >= 0);
+    if (subset.length) fns = subset;
+  }
+
+  // stage photos: the untagged ones, or everything if nothing sits loose
+  const stagePhotos = (function () {
+    if (data.stage && data.stage.photoTag !== undefined)
+      return allPhotos.filter(p => p.tag === data.stage.photoTag);
+    const loose = allPhotos.filter(p => !p.tag);
+    return loose.length ? loose : allPhotos;
+  })();
+
+  app.replaceChildren();
+  app.append(buildStage(data, stagePhotos, fns));
+
+  const detail = el("div", "detail");
+  detail.append(buildJump(fns, data));
+  const inner = el("div", "inner");
+  inner.append(buildOpening(data, fns));
+  fns.forEach(fn => inner.append(buildFunction(fn, allPhotos)));
+  if (data.details) inner.append(buildDetails(data.details));
+  if (data.rsvp) inner.append(buildRsvp(data.rsvp, fns));
+  inner.append(buildFooter(data));
+  detail.append(inner);
+  app.append(detail);
+})();
+</script>
+</body>
+</html>

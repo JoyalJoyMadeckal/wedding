@@ -1,0 +1,132 @@
+{
+  "_readme": "This file is the whole site. Edit it, run 'python build.py', refresh. Text fields support **bold**, *italic*, [link](https://…) and newlines.",
+
+  "site": {
+    "lang": "en",
+    "url": "https://joyaljoymadeckal.github.io/wedding",
+    "shareImage": "photos/share.jpg",
+    "description": "Joyal Joy Madeckal and Anjana Raju invite you to their ring exchange and their wedding. Details and RSVP."
+  },
+
+  "couple": {
+    "partnerOne": "Joyal Joy Madeckal",
+    "partnerTwo": "Anjana Raju",
+    "joiner": "&"
+  },
+
+  "stage": {
+    "slideSeconds": 5
+  },
+
+  "invitation": {
+    "preamble": "Together with their families",
+    "lead": "Two celebrations, two months apart — and we would love you at both.",
+    "body": "PLACEHOLDER — two or three sentences here. Where you met, or simply that you're glad they're coming. Keep it short; the details are below."
+  },
+
+  "functions": [
+    {
+      "id": "ring",
+      "name": "Ring Exchange",
+      "navLabel": "Ring exchange",
+      "countdownLabel": "ring exchange",
+      "kicker": "The first celebration",
+      "tagline": "A small evening with family and close friends.",
+      "accent": "sage",
+      "date": "2026-10-31T16:00",
+      "dateLabel": "Saturday 31 October 2026",
+      "shortDate": "31 Oct 2026",
+      "time": "4:00 pm — 10:00 pm",
+      "venue": "RING EXCHANGE VENUE",
+      "address": "123 Placeholder Street, Suburb, City 0000",
+      "note": "Dinner is served from 7:30 pm.",
+      "tags": ["Indo-western", "Dinner provided", "Street parking"],
+      "mapUrl": "https://maps.google.com/?q=123+Placeholder+Street",
+      "mapLabel": "Open in Maps",
+      "photoTag": "ring",
+      "slideSeconds": 7
+    },
+    {
+      "id": "wedding",
+      "name": "The Wedding",
+      "navLabel": "Wedding",
+      "countdownLabel": "wedding",
+      "kicker": "The main day",
+      "tagline": "The ceremony, then dinner and dancing until late.",
+      "accent": "rose",
+      "date": "2027-11-01T12:15",
+      "dateLabel": "Sunday 01 November 2026",
+      "shortDate": "01 Nov 2026",
+      "time": "Ceremony 12:15 pm · Reception 4:00 pm",
+      "venue": "WEDDING VENUE",
+      "address": "456 Placeholder Road, Suburb, City 0000",
+      "note": "Ceremony and reception are at the same venue, so there's no travel in between.",
+      "tags": ["Formal", "Outdoors on grass", "Parking on site"],
+      "mapUrl": "https://maps.google.com/?q=456+Placeholder+Road",
+      "mapLabel": "Open in Maps",
+      "photoTag": "wedding",
+      "slideSeconds": 7
+    }
+  ],
+
+  "details": {
+    "title": "Good to know",
+    "navLabel": "Good to know",
+    "intro": "The same for both events unless noted.",
+    "items": [
+      { "term": "What to wear", "description": "PLACEHOLDER — see the label on each event above. The wedding reception is on grass, so heels will sink." },
+      { "term": "Getting there", "description": "PLACEHOLDER — parking, nearest station, shuttle times." },
+      { "term": "Where to stay", "description": "PLACEHOLDER — a hotel or two near the wedding venue, plus any block-booking code." },
+      { "term": "Children", "description": "PLACEHOLDER — say plainly whether kids are invited, and whether that differs between the two events." },
+      { "term": "Gifts", "description": "PLACEHOLDER — registry link, or a sentence saying your presence is enough." },
+      { "term": "Photos", "description": "PLACEHOLDER — e.g. phones away during the ceremony, then share everything after." }
+    ]
+  },
+
+  "rsvp": {
+    "title": "Will you join us?",
+    "navLabel": "RSVP",
+    "intro": "Reply for each event separately — you're welcome at one or both. Please let us know by **PLACEHOLDER DATE**. One form per household is fine.",
+    "mode": "gsheet",
+    "sheetEndpoint": "https://script.google.com/macros/s/AKfycbzPy2vpjbyz1zrkUbNoYPmGRN0Z7OzSpdLKr-qnGyQnRH9mahNlfPZ2oSzKEHHJzB472Q/exec",
+    "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
+    "note": "We'll email you a confirmation. Change of plans? Just reply to that email.",
+    "labels": {
+      "name": "Your name",
+      "email": "Email",
+      "yes": "Joyfully yes",
+      "no": "Sadly no",
+      "headcount": "How many of you?",
+      "dietary": "Anything you can't eat?",
+      "song": "A song that will get you dancing",
+      "message": "A note for us",
+      "submit": "Send reply"
+    },
+    "messages": {
+      "sending": "Sending…",
+      "sent": "Thank you — we've got your reply.",
+      "failed": "That didn't send. Please email us instead and we'll add you by hand."
+    }
+  },
+
+  "contacts": [
+    { "name": "PLACEHOLDER NAME", "phone": "+61 000 000 000", "email": "hello@example.com" }
+  ],
+
+  "theme": {
+    "sage": "#98A086",
+    "rose": "#A76D5E",
+    "tan": "#C4A071",
+    "beige": "#DFCCB1",
+    "terracotta": "#846044",
+    "sageDeep": "#5F6B52",
+    "roseDeep": "#7E4E42",
+    "tanDeep": "#8A6B41",
+    "terracottaDeep": "#5E4430",
+    "paper": "#FAF5EC",
+    "paperWarm": "#F2E9DA",
+    "ink": "#3A2C22",
+    "muted": "#786250",
+    "hairline": "#E0D2BE"
+  }
+}
