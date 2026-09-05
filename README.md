@@ -92,6 +92,11 @@ Each event gets its own yes/no and headcount, submitted as one form. Field names
 follow the event `id`: `ring_attending`, `ring_guests`, `wedding_attending`,
 `wedding_guests`. Choosing "sadly no" zeroes and disables that event's headcount.
 
+In `gsheet` mode the replies land in two tabs: **`RSVP`** keeps every
+submission ever, **`Latest`** keeps one current row per guest. A guest who
+changes their mind just resubmits — their `Latest` row updates in place and the
+`replies` column ticks up. Read `Latest`; leave `RSVP` alone.
+
 | Mode | Host | Setup |
 |---|---|---|
 | `gsheet` ← **current** | Anywhere | Apps Script on a Google Sheet. Paste its `/exec` URL into `rsvp.sheetEndpoint`. See `DEPLOY.md` part A |

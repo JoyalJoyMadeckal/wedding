@@ -17,9 +17,12 @@ Nothing here bills you or lapses. GitHub Pages has no trial period.
 
 1. Go to <https://sheets.new>.
 2. Rename it something like **Wedding RSVPs**.
-3. Bottom-left, rename the tab from `Sheet1` to exactly **`RSVP`** (capitals matter).
 
-Leave it empty. The script writes the header row itself.
+That's it. Leave it completely empty — don't rename the tab, don't add headers.
+The script creates the two tabs it needs on the first submission.
+
+> Use a **personal Gmail**, not your work account. Work accounts get deleted
+> when you leave, and IT can disable Apps Script or block "Anyone" deployments.
 
 ### A2 — Attach the script
 
@@ -75,6 +78,43 @@ Open `wedding.json`, find:
 ```
 
 Replace the whole string with your `/exec` URL. Save.
+
+### A6 — Reading your replies
+
+After the first RSVP arrives, your spreadsheet has two tabs:
+
+| Tab | What's in it | Use it for |
+|---|---|---|
+| **`RSVP`** | Every submission ever, in order. Nothing is overwritten. | The audit trail. Don't edit it — it's what `Latest` is rebuilt from. |
+| **`Latest`** | One row per guest, always their current answer. | **This is the one you read.** Counting, the caterer, the seating plan. |
+
+**When someone changes their mind** they just fill the form in again. A new row
+lands in `RSVP`, and their existing row in `Latest` is updated in place —
+no duplicates in the list you actually work from.
+
+Three columns on `Latest` make this readable:
+
+| Column | Meaning |
+|---|---|
+| `replies` | How many times they've submitted. Anything above 1 means they changed something. |
+| `firstReplied` | When they first got back to you |
+| `submittedAt` | When they last changed it |
+| `_key` | Internal — how guests are matched. Right-click column A → **Hide column**. |
+
+There's also a **Wedding RSVP** menu in the spreadsheet toolbar (reload the
+sheet once after saving the script for it to appear):
+
+- **Show headcount** — total guests per event, and the yes/no split, without
+  you writing a single formula
+- **Rebuild Latest tab** — wipes `Latest` and replays the whole log. Safe any
+  time. Use it if you accidentally edit `Latest`, or after deleting spam rows
+  from `RSVP`.
+
+**The one edge case:** guests are matched on email address. If someone replies
+the second time from a *different* email, they'll show up as two rows in
+`Latest`. Delete the stale one. (Capitalisation doesn't matter —
+`Priya@x.com` and `priya@x.com` are treated as the same person.) Guests who
+leave the email blank are matched on name instead.
 
 ### Is my sheet public?
 
@@ -242,7 +282,7 @@ not fat-finger a change at 1am; unnecessary otherwise.
 | Photos in `photos/` | Publicly downloadable by URL. `build.py` strips EXIF including GPS, so no location leaks — but the images themselves are open. |
 | `originals/` | Gitignored and excluded from `--package`. Keep it that way. |
 | Guest addresses / phone numbers | Anything you type into `wedding.json` is public. Put personal contact numbers in there only if you're happy with that. |
-| RSVP replies | Live in your private Google Sheet. Never touch the repo. |
+| RSVP replies | Live in your private Google Sheet, across the `RSVP` and `Latest` tabs. Never touch the repo. |
 | The Apps Script URL | Visible in `wedding.json`. Worst case a spammer posts junk rows into your sheet. If that ever happens, redeploy the script (new URL) and update `wedding.json`. |
 
 ---
@@ -270,6 +310,9 @@ less ugly.
 | Page loads but is blank / "can't load content" | Files went up one folder deep. Repo root must contain `index.html` directly. |
 | Photos missing | `photos/` folder wasn't uploaded, or `photos.json` is stale — rerun `--package`. |
 | RSVP says "that didn't send" | `sheetEndpoint` still says PLACEHOLDER, or the deployment isn't set to "Anyone". Test the `/exec` URL in a browser (A4). |
-| RSVP silently succeeds, no row appears | Sheet tab isn't named `RSVP`, or you edited `Code.gs` without deploying a new version. |
+| RSVP silently succeeds, no row appears | You edited `Code.gs` without deploying a **new version**. Saving alone doesn't change the live URL. |
+| Same guest appears twice in `Latest` | They used a different email the second time. Delete the stale row. |
+| No **Wedding RSVP** menu in the toolbar | Reload the spreadsheet tab once after saving the script. |
+| `Latest` looks wrong after manual edits | **Wedding RSVP → Rebuild Latest tab**. The `RSVP` log is the source of truth, so nothing is lost. |
 | WhatsApp preview shows no image | `site.url` still `example.com`, or you changed it and didn't rerun `build.py`. |
 | Changes not showing | Pages takes ~1 min to redeploy. Then hard-refresh (Ctrl+Shift+R). |

@@ -88,7 +88,7 @@
     "navLabel": "RSVP",
     "intro": "Reply for each event separately — you're welcome at one or both. Please let us know by **PLACEHOLDER DATE**. One form per household is fine.",
     "mode": "gsheet",
-    "sheetEndpoint": "https://script.google.com/macros/s/AKfycbzPy2vpjbyz1zrkUbNoYPmGRN0Z7OzSpdLKr-qnGyQnRH9mahNlfPZ2oSzKEHHJzB472Q/exec",
+    "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
     "note": "We'll email you a confirmation. Change of plans? Just reply to that email.",
     "labels": {
