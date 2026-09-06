@@ -62,6 +62,31 @@ var PREFERRED_ORDER = [
 
 var MAX_FIELD_LENGTH = 2000;   // truncate anything longer
 var MAX_FIELDS = 40;           // reject absurd payloads outright
+var MAX_GUESTS = 4;            // must match rsvp.maxGuests in wedding.json
+
+
+/* ── confirmation email ───────────────────────────────────────
+ * Sent to the guest after they RSVP. Uses the "Send email as you" permission
+ * you already granted, so nothing new to authorise — but you DO have to
+ * redeploy a new version after editing this file (see the note at the bottom).
+ *
+ * Quota: a consumer Gmail account can send 100 script emails per day. Plenty
+ * spread over weeks; check MailApp.getRemainingDailyQuota() if you're worried
+ * about a rush on the deadline. Replies that hit the cap are still recorded —
+ * only the email is skipped.
+ */
+var SEND_CONFIRMATIONS = true;
+var COUPLE = 'Joyal & Anjana';
+var SITE_URL = 'https://joyaljoymadeckal.github.io/wedding';
+var REPLY_TO = '';             // blank = replies go to the account running this
+
+// Pretty names for the form fields. Anything missing falls back to the field
+// name, so adding an event to wedding.json still produces a sensible email.
+var EVENT_LABELS = {
+  ring: 'Ring Exchange Ceremony',
+  wedding: 'Wedding Ceremony',
+  reception: 'Post Wedding Reception'
+};
 
 
 /* ── the endpoint ─────────────────────────────────────────────── */
@@ -86,7 +111,15 @@ function doPost(e) {
     data.submittedAt = timestamp_();
 
     appendToLog_(data);
-    upsertLatest_(data);
+    var isUpdate = upsertLatest_(data);
+
+    // a mail failure must never cost us the reply, so it can't throw upward
+    try {
+      sendConfirmation_(data, isUpdate);
+      notify_(data, isUpdate);
+    } catch (mailErr) {
+      Logger.log('confirmation email failed: ' + mailErr);
+    }
 
     // deliberately returns nothing about the sheet — not the row number, not
     // the guest count. The caller only needs to know it landed.
@@ -140,6 +173,7 @@ function upsertLatest_(data) {
     record.firstReplied = data.submittedAt;
     sheet.appendRow(rowFor_(headers, record));
   }
+  return !!rowNum;          // true when this was a change of plan
 }
 
 /** Match guests on email; fall back to name if they left it blank. */
@@ -216,6 +250,12 @@ function sanitise_(data) {
              ALLOWED_PATTERNS.some(function (re) { return re.test(key); });
     if (!ok) return;
     var v = String(data[key] === undefined ? '' : data[key]).trim();
+    // headcounts are clamped here too — the form's max= is only a suggestion
+    // to the browser, and a hand-crafted POST can say anything
+    if (/_guests$/.test(key)) {
+      var n = Math.floor(Number(v));
+      v = String(isNaN(n) || n < 0 ? 0 : Math.min(n, MAX_GUESTS));
+    }
     if (v.length > MAX_FIELD_LENGTH) v = v.slice(0, MAX_FIELD_LENGTH) + '…';
     // a leading =, +, - or @ makes Sheets treat the text as a formula
     if (/^[=+\-@]/.test(v)) v = "'" + v;
@@ -304,19 +344,132 @@ function showHeadcount() {
 }
 
 
+/* ── confirmation to the guest ────────────────────────────────── */
+
+/**
+ * Reads the *_attending / *_guests pairs back out of the submission and turns
+ * them into a human summary, so the guest can check we got it right.
+ */
+function summarise_(data) {
+  var lines = [];
+  Object.keys(data).forEach(function (key) {
+    var m = key.match(/^(.+)_attending$/);
+    if (!m) return;
+    var id = m[1];
+    var label = EVENT_LABELS[id] || titleCase_(id);
+    var going = String(data[key]).toLowerCase() === 'yes';
+    var heads = Number(data[id + '_guests']) || 0;
+    lines.push({
+      label: label,
+      going: going,
+      text: going ? ('Yes — ' + heads + (heads === 1 ? ' guest' : ' guests'))
+                  : 'Not this time'
+    });
+  });
+  return lines;
+}
+
+function titleCase_(s) {
+  return String(s).replace(/[_-]+/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); });
+}
+
+function looksLikeEmail_(s) {
+  return /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(String(s || '').trim());
+}
+
+function sendConfirmation_(data, isUpdate) {
+  if (!SEND_CONFIRMATIONS) return;
+  if (!looksLikeEmail_(data.email)) return;        // nothing to send to
+
+  if (MailApp.getRemainingDailyQuota() < 2) {      // don't die on the last one
+    Logger.log('mail quota exhausted — skipped confirmation for ' + data.email);
+    return;
+  }
+
+  var name = String(data.name || '').split(' ')[0] || 'there';
+  var rows = summarise_(data);
+
+  var subject = isUpdate
+    ? 'Your RSVP has been updated — ' + COUPLE
+    : 'Thank you for your RSVP — ' + COUPLE;
+
+  var plain = [
+    'Hi ' + name + ',',
+    '',
+    isUpdate
+      ? "We've updated your reply. Here's what we have now:"
+      : "Thank you — we've got your reply. Here's what we have:",
+    ''
+  ];
+  rows.forEach(function (r) { plain.push('  ' + r.label + ': ' + r.text); });
+  if (data.song) plain.push('', '  Your song request: ' + data.song);
+  if (data.message) plain.push('', '  Your note: ' + data.message);
+  plain.push(
+    '',
+    'Something not right, or plans changed? Fill the form in again at',
+    SITE_URL + '#rsvp — it replaces this reply. Or just hit reply to this email.',
+    '',
+    'We cannot wait to celebrate with you.',
+    COUPLE
+  );
+
+  var e = function (s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  };
+  var items = rows.map(function (r) {
+    return '<tr>' +
+      '<td style="padding:6px 14px 6px 0;color:#3A2C22;">' + e(r.label) + '</td>' +
+      '<td style="padding:6px 0;color:' + (r.going ? '#5F6B52' : '#786250') + ';">' +
+      e(r.text) + '</td></tr>';
+  }).join('');
+
+  var extra = '';
+  if (data.song) extra += '<p style="margin:0 0 6px;color:#786250;font-size:14px;">Song request: ' + e(data.song) + '</p>';
+  if (data.message) extra += '<p style="margin:0;color:#786250;font-size:14px;">Your note: ' + e(data.message) + '</p>';
+
+  var html =
+    '<div style="font-family:Georgia,serif;background:#FAF5EC;padding:28px;color:#3A2C22;">' +
+      '<div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #E0D2BE;padding:28px;">' +
+        '<p style="margin:0 0 18px;font-size:16px;">Hi ' + e(name) + ',</p>' +
+        '<p style="margin:0 0 18px;font-size:15px;line-height:1.6;">' +
+          (isUpdate ? "We&rsquo;ve updated your reply. Here&rsquo;s what we have now:"
+                    : "Thank you &mdash; we&rsquo;ve got your reply. Here&rsquo;s what we have:") +
+        '</p>' +
+        '<table style="border-collapse:collapse;font-size:15px;margin:0 0 18px;">' + items + '</table>' +
+        (extra ? '<div style="border-top:1px solid #E0D2BE;padding-top:14px;margin-bottom:18px;">' + extra + '</div>' : '') +
+        '<p style="margin:0 0 18px;font-size:14px;color:#786250;line-height:1.6;">' +
+          'Something not right, or plans changed? ' +
+          '<a href="' + e(SITE_URL) + '#rsvp" style="color:#846044;">Fill the form in again</a> ' +
+          'and it replaces this reply &mdash; or just hit reply to this email.' +
+        '</p>' +
+        '<p style="margin:0;font-size:15px;">We cannot wait to celebrate with you.<br>' +
+          '<span style="font-size:17px;">' + e(COUPLE) + '</span></p>' +
+      '</div>' +
+    '</div>';
+
+  var options = { name: COUPLE, htmlBody: html };
+  if (REPLY_TO) options.replyTo = REPLY_TO;
+
+  MailApp.sendEmail(data.email, subject, plain.join('\n'), options);
+}
+
+
 /* ── optional: email yourself on each RSVP ────────────────────── */
 
 /**
- * Set YOUR_EMAIL, then add   notify_(data);   inside doPost, just before the
- * 'return reply({ ok: true })' line. Redeploy afterwards (Deploy -> Manage
- * deployments -> pencil -> Version: New version) or nothing changes.
- *
- * Consumer Gmail allows 100 script-sent emails per day.
+ * Just set YOUR_EMAIL — doPost already calls this. Leave it blank to disable.
+ * Redeploy after editing (Deploy -> Manage deployments -> pencil -> Version:
+ * New version) or nothing changes.
  */
 var YOUR_EMAIL = '';   // e.g. 'you@gmail.com' — leave blank to disable
 
-function notify_(data) {
+function notify_(data, isUpdate) {
   if (!YOUR_EMAIL) return;
-  var lines = Object.keys(data).map(function (k) { return k + ': ' + data[k]; });
-  MailApp.sendEmail(YOUR_EMAIL, 'Wedding RSVP — ' + (data.name || 'someone'), lines.join('\n'));
+  var lines = [(isUpdate ? 'UPDATED reply' : 'New reply') + ' from ' + (data.name || 'someone'), ''];
+  summarise_(data).forEach(function (r) { lines.push('  ' + r.label + ': ' + r.text); });
+  lines.push('');
+  Object.keys(data).forEach(function (k) { lines.push(k + ': ' + data[k]); });
+  MailApp.sendEmail(YOUR_EMAIL,
+    (isUpdate ? 'RSVP updated — ' : 'RSVP — ') + (data.name || 'someone'),
+    lines.join('\n'));
 }

@@ -242,6 +242,84 @@ p:last-child{margin-bottom:0}
   .facts>div{grid-template-columns:9.5rem 1fr}
 }
 
+/* ── dress code ─────────────────────────────────────────── */
+.wear + .wear{margin-top:1.5rem;padding-top:1.4rem;border-top:1px dashed var(--hairline)}
+.wear-label{
+  font-family:var(--display);font-size:1rem;color:var(--ink);
+  margin:0 0 .45rem;line-height:1.3;
+}
+.wear-line{margin:0 0 .2rem;font-size:.9375rem}
+.wear-k{
+  display:block;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tan-deep);
+}
+.wear-fig{
+  display:block;width:100%;margin:.9rem 0 0;padding:0;
+  background:none;border:1px solid var(--hairline);border-radius:2px;
+  cursor:zoom-in;overflow:hidden;
+}
+.wear-fig img{width:100%;height:auto}          /* whole image, never cropped */
+.wear-fig:hover{border-color:var(--tan)}
+.wear-fig:focus-visible{outline:2px solid var(--terracotta);outline-offset:2px}
+.wear-zoom{
+  display:block;padding:.45rem;
+  font-family:var(--text);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);background:var(--paper-warm);
+  border-top:1px solid var(--hairline);
+}
+
+/* ── key/value details (getting there) ──────────────────── */
+.kv{list-style:none;margin:0;padding:0}
+.kv li{margin:0 0 .7rem}
+.kv li:last-child{margin-bottom:0}
+.kv-k{
+  display:block;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tan-deep);
+}
+
+/* ── shared photo album ─────────────────────────────────── */
+.album{margin-top:1rem}
+.album-link{
+  display:inline-block;
+  font-family:var(--text);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--paper);border:1px solid var(--tan);border-radius:2px;
+  color:var(--tan-deep);padding:.7rem 1.4rem;text-decoration:none;
+}
+.album-link:hover{background:var(--paper-warm);border-color:var(--tan-deep)}
+.album-link:focus-visible{outline:2px solid var(--terracotta);outline-offset:2px}
+.album-link .ext{margin-left:.45rem;font-size:.9em}
+.album-qr{
+  display:none;                                 /* phones can't scan themselves */
+  margin:.9rem 0 0;width:min(9rem,42vw);height:auto;
+  background:#fff;padding:.5rem;border:1px solid var(--hairline);border-radius:2px;
+}
+.album-cap{display:none;font-size:.8125rem;color:var(--muted);margin:.5rem 0 0}
+@media (hover:hover) and (pointer:fine){
+  .album-qr,.album-cap{display:block}
+}
+
+/* ── lightbox ───────────────────────────────────────────── */
+.lb{
+  position:fixed;inset:0;z-index:50;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(.75rem,3vw,2rem);
+  background:rgba(34,26,20,.93);
+}
+.lb[hidden]{display:none}
+.lb img{max-width:100%;max-height:92svh;width:auto;height:auto;border-radius:2px}
+.lb-close{
+  position:absolute;top:.75rem;right:.9rem;
+  width:2.6rem;height:2.6rem;
+  font-size:1.1rem;line-height:1;
+  color:var(--paper);background:rgba(250,245,236,.14);
+  border:1px solid rgba(250,245,236,.3);border-radius:50%;
+  cursor:pointer;
+}
+.lb-close:hover{background:rgba(250,245,236,.26)}
+.lb-close:focus-visible{outline:2px solid var(--paper);outline-offset:3px}
+
 .section-head{margin-top:3.25rem}
 .section-head h2{font-size:clamp(1.5rem,4.6vw,1.9rem);margin-bottom:.45rem}
 .section-head>p{color:var(--muted);font-size:.9375rem;max-width:46ch}
@@ -427,6 +505,14 @@ const el = (tag, cls, text) => {
   return n;
 };
 
+/* Photo tags come from folder names on disk but photoTag is typed by hand in
+   wedding.json, so "Wedding" and "wedding" must mean the same thing. */
+function norm(s) { return String(s == null ? "" : s).trim().toLowerCase(); }
+function sameTag(a, b) { return norm(a) === norm(b); }
+
+/* folders under originals/ that feed the page but never a slideshow */
+const RESERVED_TAGS = new Set(["dresscode"]);
+
 /* escape first, then allow **bold**, *italic*, [text](url), newlines */
 function rich(node, str) {
   if (!str) { node.textContent = ""; return node; }
@@ -592,7 +678,7 @@ function buildFunction(fn, photos) {
   accentVars(s, fn.accent);
 
   const tag = fn.photoTag !== undefined ? fn.photoTag : fn.id;
-  const pics = photos.filter(p => p.tag === tag);
+  const pics = photos.filter(p => sameTag(p.tag, tag));
   if (pics.length) {
     const arch = el("div", "arch");
     slideshow(arch, pics, { interval: (fn.slideSeconds || 7) * 1000 });
@@ -644,20 +730,166 @@ function buildFunction(fn, photos) {
 }
 
 /* ── shared details ────────────────────────────────────── */
+/* An item's "description" can be three things, so each gets its own renderer:
+     a string   -> a paragraph
+     an array   -> one block per entry (the dress code, one per event)
+     an object  -> a key/value list (getting there: parking, airport, …)     */
 function buildDetails(d) {
   const s = el("section", "section-head");
   s.id = "details";
   s.append(el("h2", null, d.title || "Good to know"));
   if (d.intro) s.append(rich(el("p"), d.intro));
+
   const dl = el("dl", "facts");
   (d.items || []).forEach(it => {
     const row = el("div");
     row.append(el("dt", null, it.term));
-    row.append(rich(el("dd"), it.description));
+    const dd = el("dd");
+    describe(dd, it.description);
+    if (it.album && it.album.url) dd.append(buildAlbum(it.album));
+    row.append(dd);
     dl.append(row);
   });
   s.append(dl);
   return s;
+}
+
+function describe(dd, value) {
+  if (value == null) return;
+
+  if (Array.isArray(value)) {
+    value.forEach(entry => dd.append(buildWear(entry)));
+    return;
+  }
+  if (typeof value === "object") {
+    const ul = el("ul", "kv");
+    Object.keys(value).forEach(k => {
+      if (!value[k]) return;
+      const li = el("li");
+      li.append(el("span", "kv-k", titleCase(k)));
+      li.append(rich(el("span", "kv-v"), value[k]));
+      ul.append(li);
+    });
+    if (ul.children.length) dd.append(ul);
+    return;
+  }
+  dd.append(rich(el("p"), value));
+}
+
+function titleCase(k) {
+  return String(k).replace(/([a-z])([A-Z])/g, "$1 $2")
+                  .replace(/[_-]+/g, " ")
+                  .replace(/^./, c => c.toUpperCase());
+}
+
+/* One event's dress code: the words first, then the artwork. The image is a
+   button so it opens full-screen — at column width the palette labels baked
+   into it are far too small to read. */
+function buildWear(entry) {
+  const box = el("div", "wear");
+  if (entry.label) box.append(el("p", "wear-label", entry.label));
+  if (entry.dresscode) {
+    const p = el("p", "wear-line");
+    p.append(el("span", "wear-k", "Dress code"));
+    p.append(rich(el("span"), entry.dresscode));
+    box.append(p);
+  }
+  if (entry.colortheme) {
+    const p = el("p", "wear-line");
+    p.append(el("span", "wear-k", "Colours"));
+    p.append(rich(el("span"), entry.colortheme));
+    box.append(p);
+  }
+
+  if (entry.image) {
+    const alt = entry.imageAlt || ((entry.label || "") + " dress code");
+    const btn = el("button", "wear-fig");
+    btn.type = "button";
+    btn.setAttribute("aria-label", alt + " — tap to enlarge");
+
+    const pic = el("picture");
+    if (entry.imageWebp) {
+      const src = el("source");
+      src.srcset = entry.imageWebp; src.type = "image/webp";
+      pic.append(src);
+    }
+    const img = el("img");
+    img.src = entry.image; img.alt = alt; img.loading = "lazy"; img.decoding = "async";
+    pic.append(img);
+
+    btn.append(pic, el("span", "wear-zoom", entry.zoomLabel || "Tap to enlarge"));
+    btn.addEventListener("click", () => openLightbox(entry.image, alt));
+    box.append(btn);
+  }
+  return box;
+}
+
+/* Shared photo album. On a phone the link is enough — you can't scan the
+   screen you're holding — so the QR is desktop-only, via CSS. */
+function buildAlbum(a) {
+  const wrap = el("div", "album");
+
+  const link = el("a", "album-link", a.label || "Add your photos");
+  link.href = a.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.append(el("span", "ext", "↗"));
+  wrap.append(link);
+
+  const qr = el("img", "album-qr");
+  qr.src = "photos/album-qr.png";
+  qr.alt = "QR code linking to the shared photo album";
+  qr.loading = "lazy";
+  qr.width = 480; qr.height = 480;
+  qr.onerror = () => qr.remove();
+  wrap.append(qr);
+
+  if (a.qrCaption) wrap.append(el("p", "album-cap", a.qrCaption));
+  return wrap;
+}
+
+/* ── lightbox ──────────────────────────────────────────── */
+let lightboxEl = null, lastFocus = null;
+
+function openLightbox(src, alt) {
+  lastFocus = document.activeElement;
+  if (!lightboxEl) lightboxEl = makeLightbox();
+  const img = lightboxEl.querySelector("img");
+  img.src = src; img.alt = alt || "";
+  lightboxEl.hidden = false;
+  document.body.style.overflow = "hidden";
+  lightboxEl.querySelector(".lb-close").focus();
+}
+
+function closeLightbox() {
+  if (!lightboxEl) return;
+  lightboxEl.hidden = true;
+  document.body.style.overflow = "";
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+
+function makeLightbox() {
+  const box = el("div", "lb");
+  box.hidden = true;
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+
+  const close = el("button", "lb-close", "✕");
+  close.type = "button";
+  close.setAttribute("aria-label", "Close");
+  close.addEventListener("click", closeLightbox);
+
+  const img = el("img");
+  box.append(close, img);
+
+  // backdrop click closes; clicking the picture itself should not
+  box.addEventListener("click", e => { if (e.target === box) closeLightbox(); });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !box.hidden) closeLightbox();
+  });
+
+  document.body.append(box);
+  return box;
 }
 
 /* ── gifts ─────────────────────────────────────────────── */
@@ -673,9 +905,13 @@ function upiLink(g) {
 }
 
 function giftsOn(data) {
-  return !!(data.gifts && upiLink(data.gifts));
+  const g = data.gifts;
+  return !!(g && (upiLink(g) || g.url));
 }
 
+/* Order follows the wording in wedding.json: registry first ("we've put
+   together a little registry"), then UPI ("if the registry didn't quite do
+   it for you"). Either half disappears if its URL / id is blank. */
 function buildGifts(g) {
   const s = el("section", "section-head");
   s.id = "gifts";
@@ -683,85 +919,86 @@ function buildGifts(g) {
   if (g.intro) s.append(rich(el("p"), g.intro));
 
   const box = el("div", "gift");
-  if (g.body) box.append(rich(el("p"), g.body));
 
-  const href = upiLink(g);
-
-  /* Touch devices get a link that opens their UPI app. Desktop can't do
-     anything with that, so CSS swaps in the QR — you can't scan the screen
-     you're holding. */
-  const a = el("a", "btn", g.buttonLabel || "Open your UPI app");
-  a.href = href;
-  a.rel = "nofollow";
-  box.append(a);
-
-  const qr = el("img", "gift-qr");
-  qr.src = "photos/upi-qr.png";
-  qr.alt = "UPI payment QR code";
-  qr.loading = "lazy";
-  qr.width = 480; qr.height = 480;
-  qr.onerror = () => qr.remove();       // build.py hasn't generated it yet
-  box.append(qr);
-
-  if (g.qrCaption) box.append(el("p", "gift-cap", g.qrCaption));
-
-  /* The fallback for when the QR won't scan and the deep link doesn't fire
-     (iOS is unreliable). The id itself stays off the page — it's only put on
-     screen if the clipboard turns out to be unavailable. */
-  const id = (g.upi || {}).id;
-  if (id) {
-    const label = g.copyLabel || "Copy UPI ID";
-    const copy = el("button", "gift-copy", label);
-    copy.type = "button";
-
-    copy.addEventListener("click", async () => {
-      let ok = false;
-      try {
-        await navigator.clipboard.writeText(id);
-        ok = true;
-      } catch (err) {
-        const t = el("textarea");                 // older browsers, and http://
-        t.value = id;
-        t.style.position = "fixed"; t.style.opacity = "0";
-        document.body.append(t); t.select();
-        try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
-        t.remove();
-      }
-
-      if (ok) {
-        copy.textContent = g.copied || "Copied";
-        setTimeout(() => { copy.textContent = label; }, 1800);
-      } else if (!box.querySelector(".gift-reveal")) {
-        // last resort: show it so they can select it by hand
-        copy.textContent = g.copyFailed || "Copy it from here";
-        box.append(el("p", "gift-reveal", id));
-      }
-    });
-
-    box.append(copy);
-    if (g.copyHint) box.append(rich(el("p", "gift-hint"), g.copyHint));
-  }
-
-  if (g.footnote) box.append(rich(el("p", "gift-foot"), g.footnote));
-
-  /* Registry lives on someone else's site, so it opens in a new tab rather
-     than navigating away from the invitation. */
-  const reg = g.registry || {};
-  if (reg.url) {
-    const alt = el("div", "gift-alt");
-    if (reg.lead) alt.append(rich(el("p", "gift-alt-lead"), reg.lead));
-
-    const a = el("a", "gift-reg", reg.label || "Open our registry");
-    a.href = reg.url;
+  /* ── the registry, hosted elsewhere ── */
+  if (g.url) {
+    if (g.body) box.append(rich(el("p"), g.body));
+    const label = g.registryLabel || "Open our registry";
+    const a = el("a", "gift-reg", label);
+    a.href = g.url;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
     a.append(el("span", "ext", "↗"));
-    a.setAttribute("aria-label", (reg.label || "Open our registry") + " (opens in a new tab)");
+    a.setAttribute("aria-label", label + " (opens in a new tab)");
+    box.append(a);
+  } else if (g.body) {
+    box.append(rich(el("p"), g.body));
+  }
+
+  /* ── UPI ── */
+  const href = upiLink(g);
+  if (href) {
+    const alt = el("div", g.url ? "gift-alt" : null);
+    if (g.description) alt.append(rich(el("p", "gift-alt-lead"), g.description));
+
+    /* Touch devices get a link that opens their UPI app. Desktop can't do
+       anything with that, so CSS swaps in the QR — you can't scan the screen
+       you're holding. */
+    const a = el("a", "btn", g.buttonLabel || "Open your UPI app");
+    a.href = href;
+    a.rel = "nofollow";
     alt.append(a);
 
-    if (reg.note) alt.append(rich(el("p", "gift-note"), reg.note));
+    const qr = el("img", "gift-qr");
+    qr.src = "photos/upi-qr.png";
+    qr.alt = "UPI payment QR code";
+    qr.loading = "lazy";
+    qr.width = 480; qr.height = 480;
+    qr.onerror = () => qr.remove();       // build.py hasn't generated it yet
+    alt.append(qr);
+
+    if (g.qrCaption) alt.append(el("p", "gift-cap", g.qrCaption));
+
+    /* The fallback for when the QR won't scan and the deep link doesn't fire
+       (iOS is unreliable). The id itself stays off the page — it's only put on
+       screen if the clipboard turns out to be unavailable. */
+    const id = (g.upi || {}).id;
+    if (id) {
+      const label = g.copyLabel || "Copy UPI ID";
+      const copy = el("button", "gift-copy", label);
+      copy.type = "button";
+
+      copy.addEventListener("click", async () => {
+        let ok = false;
+        try {
+          await navigator.clipboard.writeText(id);
+          ok = true;
+        } catch (err) {
+          const t = el("textarea");               // older browsers, and http://
+          t.value = id;
+          t.style.position = "fixed"; t.style.opacity = "0";
+          document.body.append(t); t.select();
+          try { ok = document.execCommand("copy"); } catch (e2) { ok = false; }
+          t.remove();
+        }
+
+        if (ok) {
+          copy.textContent = g.copied || "Copied";
+          setTimeout(() => { copy.textContent = label; }, 1800);
+        } else if (!alt.querySelector(".gift-reveal")) {
+          // last resort: show it so they can select it by hand
+          copy.textContent = g.copyFailed || "Copy it from here";
+          alt.append(el("p", "gift-reveal", id));
+        }
+      });
+
+      alt.append(copy);
+      if (g.copyHint) alt.append(rich(el("p", "gift-hint"), g.copyHint));
+    }
     box.append(alt);
   }
+
+  if (g.footnote) box.append(rich(el("p", "gift-foot"), g.footnote));
 
   s.append(box);
   return s;
@@ -828,7 +1065,7 @@ function buildRsvp(r, fns) {
     hl.htmlFor = key + "_guests";
     const hi = el("input");
     hi.type = "number"; hi.id = key + "_guests"; hi.name = key + "_guests";
-    hi.min = 0; hi.max = 12; hi.value = 1;
+    hi.min = 0; hi.max = Number(r.maxGuests) || 4; hi.value = 1;
     hc.append(hl, hi);
     fs.append(hc);
 
@@ -839,6 +1076,12 @@ function buildRsvp(r, fns) {
       if (no) hi.value = 0;
       else if (Number(hi.value) === 0) hi.value = 1;
       hc.style.opacity = no ? ".45" : "1";
+    });
+
+    // typing past the cap is possible even with max set, so clamp on the way out
+    hi.addEventListener("input", () => {
+      const cap = Number(hi.max);
+      if (Number(hi.value) > cap) hi.value = cap;
     });
 
     block.append(fs);
@@ -998,9 +1241,10 @@ function applyTheme(t) {
   // stage photos: the untagged ones, or everything if nothing sits loose
   const stagePhotos = (function () {
     if (data.stage && data.stage.photoTag !== undefined)
-      return allPhotos.filter(p => p.tag === data.stage.photoTag);
+      return allPhotos.filter(p => sameTag(p.tag, data.stage.photoTag));
     const loose = allPhotos.filter(p => !p.tag);
-    return loose.length ? loose : allPhotos;
+    // falling back to "everything" must not drag in the dress-code artwork
+    return loose.length ? loose : allPhotos.filter(p => !RESERVED_TAGS.has(norm(p.tag)));
   })();
 
   app.replaceChildren();

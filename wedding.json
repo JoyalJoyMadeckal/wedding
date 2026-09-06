@@ -19,9 +19,9 @@
   },
 
   "invitation": {
-    "preamble": "Together with the blessings of our families",
-    "lead": "With hearts full of joy, we invite you to celebrate with us.",
-    "body": "PLACEHOLDER — two or three sentences in your own words. Anjana is the daughter of Raju C & Mini S S; Joyal is the son of Joy Mathew & Emily Joy, Madeckal house, Muvattupuzha. Three celebrations across a week — come to whichever you can."
+    "preamble": "Join Us, As We Begin Our Forever...",
+    "lead": "With hearts full of joy, We invite you to share these special moments with Us.",
+    "body": "Three ceremonies, Across two districts and Two faiths - We’d love for you to be part of the whole celebration."
   },
 
   "functions": [
@@ -29,9 +29,9 @@
       "id": "ring",
       "name": "Ring Exchange Ceremony",
       "navLabel": "Ring exchange",
-      "countdownLabel": "ring exchange",
-      "kicker": "The first celebration",
-      "tagline": "An evening with family and close friends.",
+      "countdownLabel": "The start of our Forever...",
+      "kicker": "The First Celebration",
+      "tagline": "A cozy evening ceremony with family and close friends, followed by a lively night of dancing, games, food, and joyful celebration.",
       "accent": "sage",
       "date": "2026-10-31T16:00",
       "dateLabel": "Saturday 31 October 2026",
@@ -50,9 +50,9 @@
       "id": "wedding",
       "name": "Wedding Ceremony",
       "navLabel": "Wedding",
-      "countdownLabel": "wedding",
-      "kicker": "The main day",
-      "tagline": "The ceremony, then the reception.",
+      "countdownLabel": "Wedding",
+      "kicker": "The Main Day",
+      "tagline": "A very intimate ceremony at Church, followed by lunch reception.",
       "accent": "rose",
       "date": "2026-11-01T12:15",
       "dateLabel": "Sunday 01 November 2026",
@@ -61,13 +61,13 @@
       "note": "",
       "tags": [],
       "mapLabel": "Open in Maps",
-      "photoTag": "wedding",
+      "photoTag": "Wedding",
       "slideSeconds": 7,
       "venues": [
         {
           "label": "Ceremony",
           "venue": "Nirmala Matha Syro Malabar Church",
-          "address": "Kizhakkekara, Muvattupuzha, Ernakulam, Kerala",
+          "address": "Kizhakkekara, Muvattupuzha",
           "time": "12:15 pm",
           "mapUrl": "https://maps.google.com/?q=Nirmala+Matha+Syro+Malabar+Church+Kizhakkekara+Muvattupuzha",
           "mapLabel": "Open in Maps"
@@ -75,8 +75,8 @@
         {
           "label": "Reception",
           "venue": "St. Sebastian's Church — Parish Hall",
-          "address": "Anicadu",
-          "time": "Following the ceremony",
+          "address": "Anicadu, Muvattupuzha",
+          "time": "1pm-4pm",
           "mapUrl": "https://maps.app.goo.gl/jCLkgrLdWP4P1wgZA",
           "mapLabel": "Open in Maps"
         }
@@ -86,9 +86,9 @@
       "id": "reception",
       "name": "Post Wedding Reception",
       "navLabel": "Reception",
-      "countdownLabel": "reception",
-      "kicker": "In Trivandrum",
-      "tagline": "A celebration back home, for everyone in and around Trivandrum.",
+      "countdownLabel": "Reception",
+      "kicker": "The Finale to our Celebration!",
+      "tagline": "A celebration back at the Bride's home, for everyone in and around Trivandrum.",
       "accent": "tan",
       "date": "2026-11-05T17:00",
       "dateLabel": "Thursday 05 November 2026",
@@ -100,7 +100,7 @@
       "tags": [],
       "mapUrl": "https://maps.google.com/?q=RDR+Auditorium+Trivandrum",
       "mapLabel": "Open in Maps",
-      "photoTag": "reception",
+      "photoTag": "Reception",
       "slideSeconds": 7
     }
   ],
@@ -108,66 +108,64 @@
   "details": {
     "title": "Good to know",
     "navLabel": "Good to know",
-    "intro": "The same for all three celebrations unless noted.",
+    "intro": "A few points to help you through the events.",
     "items": [
       {
-        "term": "What to wear",
-        "description": "PLACEHOLDER — see the label on each event above. The wedding reception is on grass, so heels will sink."
+        "term": "What to wear?",
+        "description": [
+          {
+            "label": "Ring Exchange & Pre-wedding Party",
+            "dresscode": "Indian Traditional",
+            "colortheme": "Soft Pastels: White, Pink, Green & Gold",
+            "image": "photos/dresscode-ring.jpg",
+            "imageWebp": "photos/dresscode-ring.webp",
+            "imageAlt": "Ring exchange dress code: Indian traditional in soft pastels — sage, rose, gold, ivory and terracotta"
+          },
+          {
+            "label": "Wedding Ceremony & Lunch Reception",
+            "dresscode": "Elegant Semi-Formal",
+            "colortheme": "Rich, Earthy Hues — Olive, Burgundy, Purple, Plum",
+            "image": "photos/dresscode-wedding.jpg",
+            "imageWebp": "photos/dresscode-wedding.webp",
+            "imageAlt": "Wedding dress code: elegant semi-formal in rich earthy hues — olive, burgundy, plum, merlot and fig"
+          },
+          {
+            "label": "Post Wedding Reception",
+            "dresscode": "Surprise Us!",
+            "colortheme": "Wear your favourite colours — anything goes!"
+          }
+        ]
       },
       {
         "term": "Getting there",
-        "description": "PLACEHOLDER — parking, nearest station, shuttle times."
+        "description": {
+          "parking": "Ample parking available at all venues.",
+          "airport": "Cochin International Airport (35km from Muvattupuzha)",
+          "train": "Nearest Railway Station: Aluva (35km from Muvattupuzha)",
+          "bus": "Nearest Bus Terminal: KSRTC Bus Stand Muvattupuzha"
+        }
       },
       {
         "term": "Where to stay",
         "description": "PLACEHOLDER — a hotel or two near the wedding venue, plus any block-booking code."
       },
       {
-        "term": "Children",
-        "description": "PLACEHOLDER — say plainly whether kids are invited, and whether that differs between the two events."
-      },
-      {
-        "term": "Gifts",
-        "description": "PLACEHOLDER — registry link, or a sentence saying your presence is enough."
-      },
-      {
         "term": "Photos",
-        "description": "PLACEHOLDER — e.g. phones away during the ceremony, then share everything after."
+        "description": "Captured a moment? Share it with us — add your photos and videos to our album.",
+        "album": {
+          "url": "https://photos.app.goo.gl/s4UDm8jrb9JF3wiA6",
+          "label": "Add your photos",
+          "qrCaption": "Scan to open the album on your phone"
+        }
       }
     ]
   },
 
-  "_gifts_readme": "Leave upi.id blank and the whole gifts section disappears — nav link and all. Fill it in when you're ready. The QR is generated by build.py from these values; you don't need a screenshot from PhonePe.",
-  "gifts": {
-    "title": "Gifts",
-    "navLabel": "Gifts",
-    "intro": "Your being there is genuinely the whole point — please don't feel any obligation here.",
-    "body": "PLACEHOLDER — one or two sentences. Something like: we're setting up a home and saving for a honeymoon, so if you'd like to give something, a contribution towards that would mean a lot.",
-    "upi": {
-      "id": "anjana1995raju@okaxis",
-      "name": "Joyal & Anjana",
-      "note": "Wedding gift",
-      "link": ""
-    },
-    "buttonLabel": "Open your UPI app",
-    "qrCaption": "Scan with PhonePe, GPay, Paytm or any UPI app",
-    "copyLabel": "Copy UPI ID",
-    "copied": "Copied",
-    "copyFailed": "Copy it from here",
-    "copyHint": "If the QR won't scan, tap this and paste the UPI ID into your app.",
-    "footnote": "Any UPI app works — it doesn't have to be PhonePe.",
-    "registry": {
-      "lead": "Or, if you'd rather send something for the house:",
-      "label": "Open our registry",
-      "url": "https://www.myregistry.com/wedding-registry/joyal-anjana-and-anjana-r-auburn-nsw/5618240",
-      "note": "Opens MyRegistry in a new tab."
-    }
-  },
-
   "rsvp": {
-    "title": "Will you join us?",
+    "title": "Will you be joining us?",
     "navLabel": "RSVP",
-    "intro": "Reply for each celebration separately — you're welcome at any or all of them. Please let us know by **PLACEHOLDER DATE**. One form per household is fine.",
+    "intro": "Please RSVP for each event separately — you’re welcome to be part of as many celebrations as you can make. We’d be grateful if you could let us know by **26th September 2026**, so we have enough time to make your visit as comfortable and special as possible. One RSVP per household is all you need.",
+    "maxGuests": 4,
     "mode": "gsheet",
     "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
@@ -175,9 +173,9 @@
     "labels": {
       "name": "Your name",
       "email": "Email",
-      "yes": "Joyfully yes",
-      "no": "Sadly no",
-      "headcount": "How many of you?",
+      "yes": "Of Course, Save Me a Seat!",
+      "no": "Sadly, I’ll be celebrating from afar.",
+      "headcount": "How many of you will be joining us in this celebration?",
       "song": "A song that will get you dancing",
       "message": "A note for us",
       "submit": "Send reply"
@@ -187,6 +185,29 @@
       "sent": "Thank you — we've got your reply.",
       "failed": "That didn't send. Please email us instead and we'll add you by hand."
     }
+  },
+
+  "_gifts_readme": "Two halves, each independent: 'url' drives the registry block, 'upi.id' drives the UPI block. Blank one and that half disappears; blank both and the whole section and its nav link go. Both QR codes are generated by build.py — you don't need a screenshot from PhonePe or Google Photos.",
+  "gifts": {
+    "title": "Gifts",
+    "navLabel": "Gifts",
+    "intro": "Honestly, your presence, love and blessings are all we could ask for — gifts are absolutely not expected!",
+    "body": "But if you're the kind who insists on bringing something anyway, we've put together a little registry, just to make sure whatever you choose is something we'll truly love, use and cherish.",
+    "url": "https://www.myregistry.com/wedding-registry/joyal-anjana-and-anjana-r-auburn-nsw/5618240",
+    "description": "And if the registry didn’t quite do it for you, here’s a little something towards kickstarting our life together",
+    "upi": {
+      "id": "anjana1995raju@okaxis",
+      "name": "Joyal & Anjana",
+      "note": "Wedding gift",
+      "link": ""
+    },
+    "buttonLabel": "Home Setup Fund",
+    "qrCaption": "Scan with any UPI app",
+    "copyLabel": "Copy UPI ID",
+    "copied": "Copied",
+    "copyFailed": "Copy it from here",
+    "copyHint": "If the QR won't scan, tap this and paste the UPI ID into your app.",
+    "footnote": "Thank you!"
   },
 
   "contacts": [

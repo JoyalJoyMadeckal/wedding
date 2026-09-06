@@ -43,6 +43,10 @@ CONTENT = ROOT / "wedding.json"
 MANIFEST = ROOT / "photos.json"
 PAGE = ROOT / "index.html"
 
+# originals/dresscode/ holds the outfit artwork shown under "What to wear".
+# It goes through the same resize/strip pipeline but never joins a slideshow.
+RESERVED_TAG = "dresscode"
+
 MAX_WIDTH = 1600
 JPEG_QUALITY = 82
 WEBP_QUALITY = 78
@@ -147,7 +151,7 @@ def process_photos(force: bool = False) -> list[dict]:
 
     # sweep generated files whose original was removed
     # (share.jpg and upi-qr.png aren't made from originals/ — leave them alone)
-    protected = {"share.jpg", "upi-qr.png"}
+    protected = {"share.jpg", "upi-qr.png", "album-qr.png"}
     for old in OUT.glob("*"):
         if old.stem not in live_stems and old.name not in protected:
             old.unlink()
@@ -233,31 +237,30 @@ def upi_link(gifts: dict) -> str:
     return "upi://pay?" + urlencode(params)
 
 
-def make_upi_qr(gifts: dict, ink: str) -> None:
-    """photos/upi-qr.png — shown on desktop, where a tap-to-pay link is useless.
+def write_qr(link: str, name: str, ink: str, label: str = "") -> None:
+    """photos/<name> — a QR for anything the desktop can't tap through to.
 
-    Generated from the UPI id, so it works with any UPI app rather than only
-    PhonePe, and can never drift out of sync with the link on the button.
+    Passing an empty link deletes a stale file, so clearing a URL in
+    wedding.json cleans up after itself.
     """
-    target = OUT / "upi-qr.png"
-    link = upi_link(gifts)
+    target = OUT / name
 
     if not link:
         if target.exists():
             try:
                 target.unlink()
-                print("  upi-qr.png removed — gifts.upi.id is empty")
+                print(f"  {name} removed — its URL is empty")
             except OSError:
-                # OneDrive or a viewer can hold the file open; harmless either
-                # way, since the gifts section is hidden while the id is blank
-                print("  upi-qr.png is stale but locked — delete it by hand if you like")
+                # OneDrive or an open viewer can hold the file; harmless, since
+                # the block that shows it is hidden while the URL is blank
+                print(f"  {name} is stale but locked — delete it by hand if you like")
         return
 
     try:
         import qrcode
         from qrcode.constants import ERROR_CORRECT_M
     except ImportError:
-        print('  upi-qr.png skipped — pip install "qrcode[pil]"')
+        print(f'  {name} skipped — pip install "qrcode[pil]"')
         return
 
     OUT.mkdir(exist_ok=True)
@@ -265,7 +268,27 @@ def make_upi_qr(gifts: dict, ink: str) -> None:
     qr.add_data(link)
     qr.make(fit=True)
     qr.make_image(fill_color=ink, back_color="white").save(target)
-    print(f"  upi-qr.png -> {(gifts.get('upi') or {}).get('id') or 'custom link'}")
+    print(f"  {name} -> {label or link}")
+
+
+def make_upi_qr(gifts: dict, ink: str) -> None:
+    """Generated from the UPI id, so it works with any UPI app rather than only
+    PhonePe, and can never drift out of sync with the link on the button."""
+    upi = (gifts or {}).get("upi", {})
+    write_qr(upi_link(gifts), "upi-qr.png", ink, upi.get("id", ""))
+
+
+def album_url(data: dict) -> str:
+    """The shared-album link, wherever it sits among the details items."""
+    for item in (data.get("details", {}) or {}).get("items", []):
+        url = ((item.get("album") or {}) if isinstance(item, dict) else {}).get("url")
+        if url:
+            return url
+    return ""
+
+
+def make_album_qr(data: dict, ink: str) -> None:
+    write_qr(album_url(data), "album-qr.png", ink)
 
 
 def make_qr(url: str, ink: str) -> None:
@@ -298,6 +321,7 @@ def build(force: bool = False) -> None:
     ink = data.get("theme", {}).get("ink", "#22202B")
     make_qr((data.get("site", {}).get("url") or "").rstrip("/"), ink)
     make_upi_qr(data.get("gifts", {}), ink)
+    make_album_qr(data, ink)
     if entries:
         counts: dict[str, int] = {}
         for e in entries:
@@ -305,7 +329,7 @@ def build(force: bool = False) -> None:
         for tag in sorted(counts, key=lambda t: (t == "", t)):
             where = f'{tag}/' if tag else 'main panel'
             print(f"  {counts[tag]:>3} photo(s) -> {where}")
-        unknown = set(counts) - {""} - known_tags(data)
+        unknown = {t.lower() for t in counts} - {""} - known_tags(data)
         if unknown:
             print(f"  warning: no event uses photoTag {sorted(unknown)} — check wedding.json")
     else:
@@ -352,10 +376,15 @@ def package() -> None:
 
 
 def known_tags(data: dict) -> set[str]:
-    """photoTag values declared by the events in wedding.json."""
-    out = set()
+    """photoTag values declared by the events in wedding.json, lowercased.
+
+    Folder names on disk are whatever the filesystem says; photoTag is typed by
+    hand. Comparing them case-sensitively means "Wedding" silently matches no
+    photos at all, so everything is lowercased on both sides.
+    """
+    out = {RESERVED_TAG}
     for fn in data.get("functions", []):
-        out.add(fn.get("photoTag", fn.get("id", "")))
+        out.add(str(fn.get("photoTag", fn.get("id", ""))).strip().lower())
     return {t for t in out if t}
 
 

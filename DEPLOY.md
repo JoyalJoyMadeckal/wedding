@@ -151,11 +151,45 @@ nobody is crawling wedding repos.
 Google Form link in the `details` section instead. Google Forms handles spam on
 its own. You lose the RSVP form being part of the page design.
 
-### Want an email on each RSVP?
+### Confirmation emails to guests
 
-In `Code.gs`, set `YOUR_EMAIL = 'you@gmail.com'` near the bottom, then add
-`notify_(data);` on the line just before `return reply({ ok: true, row: ... });`.
-Redeploy (**Deploy → Manage deployments → pencil icon → Version: New version → Deploy**).
+The RSVP note promises "we'll email you a confirmation" — `Code.gs` now does
+that. It's on by default (`SEND_CONFIRMATIONS = true`) and uses the *Send email
+as you* permission you already granted, so there's nothing new to authorise.
+
+Guests get a summary of exactly what they said, per event, plus a link back to
+change it. Replying a second time sends an "updated" version instead.
+
+Three settings at the top of `Code.gs`:
+
+| Setting | Default | What it does |
+|---|---|---|
+| `SEND_CONFIRMATIONS` | `true` | Set `false` to switch guest emails off |
+| `COUPLE` | `Joyal & Anjana` | Sender name and sign-off |
+| `REPLY_TO` | blank | Blank means replies go to the Gmail running the script |
+
+> ⚠️ **Emails will not start arriving until you redeploy.** Saving `Code.gs`
+> changes nothing about the live URL. Go to **Deploy → Manage deployments →
+> pencil icon → Version: New version → Deploy**. Using *New deployment* instead
+> would give you a different URL and break `sheetEndpoint`.
+
+**Quota:** a consumer Gmail account can send **100 script emails per day**. Fine
+spread over weeks; if 150 people reply the night before your deadline, the
+overflow is skipped — the RSVPs are still recorded, only the email is missed.
+The script checks the remaining quota before each send and logs any it skips
+(**Executions** in the Apps Script editor).
+
+Guests who leave the email field blank simply get no confirmation; their reply
+is recorded as normal.
+
+### Want an email to yourself on each RSVP too?
+
+In `Code.gs`, set `YOUR_EMAIL = 'you@gmail.com'` near the bottom. `doPost`
+already calls it, so that's the only change. Redeploy afterwards
+(**Deploy → Manage deployments → pencil icon → Version: New version → Deploy**).
+
+Note this doubles your email usage — one to the guest, one to you — against the
+same 100/day quota.
 
 > ⚠️ **Every time you change `Code.gs` you must deploy a NEW VERSION.** Saving
 > alone does nothing to the live URL. Use *Manage deployments → edit → New version*
