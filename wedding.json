@@ -5,7 +5,7 @@
     "lang": "en",
     "url": "https://joyaljoymadeckal.github.io/wedding",
     "shareImage": "photos/share.jpg",
-    "description": "Joyal Joy Madeckal and Anjana Raju invite you to their ring exchange and their wedding. Details and RSVP."
+    "description": "Joyal Joy Madeckal and Anjana Raju invite you to their ring exchange, their wedding, and the reception in Trivandrum. Details and RSVP."
   },
 
   "couple": {
@@ -19,52 +19,88 @@
   },
 
   "invitation": {
-    "preamble": "Together with their families",
-    "lead": "Two celebrations, two months apart — and we would love you at both.",
-    "body": "PLACEHOLDER — two or three sentences here. Where you met, or simply that you're glad they're coming. Keep it short; the details are below."
+    "preamble": "Together with the blessings of our families",
+    "lead": "With hearts full of joy, we invite you to celebrate with us.",
+    "body": "PLACEHOLDER — two or three sentences in your own words. Anjana is the daughter of Raju C & Mini S S; Joyal is the son of Joy Mathew & Emily Joy, Madeckal house, Muvattupuzha. Three celebrations across a week — come to whichever you can."
   },
 
   "functions": [
     {
       "id": "ring",
-      "name": "Ring Exchange",
+      "name": "Ring Exchange Ceremony",
       "navLabel": "Ring exchange",
       "countdownLabel": "ring exchange",
       "kicker": "The first celebration",
-      "tagline": "A small evening with family and close friends.",
+      "tagline": "An evening with family and close friends.",
       "accent": "sage",
       "date": "2026-10-31T16:00",
       "dateLabel": "Saturday 31 October 2026",
       "shortDate": "31 Oct 2026",
-      "time": "4:00 pm — 10:00 pm",
-      "venue": "RING EXCHANGE VENUE",
-      "address": "123 Placeholder Street, Suburb, City 0000",
-      "note": "Dinner is served from 7:30 pm.",
-      "tags": ["Indo-western", "Dinner provided", "Street parking"],
-      "mapUrl": "https://maps.google.com/?q=123+Placeholder+Street",
+      "time": "4:00 pm — 9:30 pm",
+      "venue": "Nutmeg County",
+      "address": "Muvattupuzha, Ernakulam, Kerala",
+      "note": "",
+      "tags": [],
+      "mapUrl": "https://maps.google.com/?q=Nutmeg+County+Muvattupuzha",
       "mapLabel": "Open in Maps",
       "photoTag": "ring",
       "slideSeconds": 7
     },
     {
       "id": "wedding",
-      "name": "The Wedding",
+      "name": "Wedding Ceremony",
       "navLabel": "Wedding",
       "countdownLabel": "wedding",
       "kicker": "The main day",
-      "tagline": "The ceremony, then dinner and dancing until late.",
+      "tagline": "The ceremony, then the reception.",
       "accent": "rose",
-      "date": "2027-11-01T12:15",
+      "date": "2026-11-01T12:15",
       "dateLabel": "Sunday 01 November 2026",
       "shortDate": "01 Nov 2026",
-      "time": "Ceremony 12:15 pm · Reception 4:00 pm",
-      "venue": "WEDDING VENUE",
-      "address": "456 Placeholder Road, Suburb, City 0000",
-      "note": "Ceremony and reception are at the same venue, so there's no travel in between.",
-      "tags": ["Formal", "Outdoors on grass", "Parking on site"],
-      "mapUrl": "https://maps.google.com/?q=456+Placeholder+Road",
+      "time": "12:15 pm onwards",
+      "note": "",
+      "tags": [],
       "mapLabel": "Open in Maps",
       "photoTag": "wedding",
+      "slideSeconds": 7,
+      "venues": [
+        {
+          "label": "Ceremony",
+          "venue": "Nirmala Matha Syro Malabar Church",
+          "address": "Kizhakkekara, Muvattupuzha, Ernakulam, Kerala",
+          "time": "12:15 pm",
+          "mapUrl": "https://maps.google.com/?q=Nirmala+Matha+Syro+Malabar+Church+Kizhakkekara+Muvattupuzha",
+          "mapLabel": "Open in Maps"
+        },
+        {
+          "label": "Reception",
+          "venue": "St. Sebastian's Church — Parish Hall",
+          "address": "Anicadu",
+          "time": "Following the ceremony",
+          "mapUrl": "https://maps.app.goo.gl/jCLkgrLdWP4P1wgZA",
+          "mapLabel": "Open in Maps"
+        }
+      ]
+    },
+    {
+      "id": "reception",
+      "name": "Post Wedding Reception",
+      "navLabel": "Reception",
+      "countdownLabel": "reception",
+      "kicker": "In Trivandrum",
+      "tagline": "A celebration back home, for everyone in and around Trivandrum.",
+      "accent": "tan",
+      "date": "2026-11-05T17:00",
+      "dateLabel": "Thursday 05 November 2026",
+      "shortDate": "05 Nov 2026",
+      "time": "5:00 pm — 9:00 pm",
+      "venue": "RDR Auditorium",
+      "address": "Trivandrum, Kerala",
+      "note": "",
+      "tags": [],
+      "mapUrl": "https://maps.google.com/?q=RDR+Auditorium+Trivandrum",
+      "mapLabel": "Open in Maps",
+      "photoTag": "reception",
       "slideSeconds": 7
     }
   ],
@@ -72,21 +108,60 @@
   "details": {
     "title": "Good to know",
     "navLabel": "Good to know",
-    "intro": "The same for both events unless noted.",
+    "intro": "The same for all three celebrations unless noted.",
     "items": [
-      { "term": "What to wear", "description": "PLACEHOLDER — see the label on each event above. The wedding reception is on grass, so heels will sink." },
-      { "term": "Getting there", "description": "PLACEHOLDER — parking, nearest station, shuttle times." },
-      { "term": "Where to stay", "description": "PLACEHOLDER — a hotel or two near the wedding venue, plus any block-booking code." },
-      { "term": "Children", "description": "PLACEHOLDER — say plainly whether kids are invited, and whether that differs between the two events." },
-      { "term": "Gifts", "description": "PLACEHOLDER — registry link, or a sentence saying your presence is enough." },
-      { "term": "Photos", "description": "PLACEHOLDER — e.g. phones away during the ceremony, then share everything after." }
+      {
+        "term": "What to wear",
+        "description": "PLACEHOLDER — see the label on each event above. The wedding reception is on grass, so heels will sink."
+      },
+      {
+        "term": "Getting there",
+        "description": "PLACEHOLDER — parking, nearest station, shuttle times."
+      },
+      {
+        "term": "Where to stay",
+        "description": "PLACEHOLDER — a hotel or two near the wedding venue, plus any block-booking code."
+      },
+      {
+        "term": "Children",
+        "description": "PLACEHOLDER — say plainly whether kids are invited, and whether that differs between the two events."
+      },
+      {
+        "term": "Gifts",
+        "description": "PLACEHOLDER — registry link, or a sentence saying your presence is enough."
+      },
+      {
+        "term": "Photos",
+        "description": "PLACEHOLDER — e.g. phones away during the ceremony, then share everything after."
+      }
     ]
+  },
+
+  "_gifts_readme": "Leave upi.id blank and the whole gifts section disappears — nav link and all. Fill it in when you're ready. The QR is generated by build.py from these values; you don't need a screenshot from PhonePe.",
+  "gifts": {
+    "title": "Gifts",
+    "navLabel": "Gifts",
+    "intro": "Your being there is genuinely the whole point — please don't feel any obligation here.",
+    "body": "PLACEHOLDER — one or two sentences. Something like: we're setting up a home and saving for a honeymoon, so if you'd like to give something, a contribution towards that would mean a lot.",
+    "upi": {
+      "id": "anjana1995raju@okaxis",
+      "name": "Joyal & Anjana",
+      "note": "Wedding gift",
+      "link": ""
+    },
+    "buttonLabel": "Open your UPI app",
+    "qrCaption": "Scan with PhonePe, GPay, Paytm or any UPI app",
+    "copyLabel": "Copy UPI ID",
+    "copied": "Copied",
+    "copyFailed": "Copy it from here",
+    "copyHint": "If the QR won't scan, tap this and paste the UPI ID into your app.",
+    "footnote": "Any UPI app works — it doesn't have to be PhonePe."
   },
 
   "rsvp": {
     "title": "Will you join us?",
     "navLabel": "RSVP",
-    "intro": "Reply for each event separately — you're welcome at one or both. Please let us know by **PLACEHOLDER DATE**. One form per household is fine.",
+    "intro": "Reply for each celebration separately — you're welcome at any or all of them. Please let us know by **PLACEHOLDER DATE**. One form per household is fine.",
     "mode": "gsheet",
     "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
@@ -97,7 +172,6 @@
       "yes": "Joyfully yes",
       "no": "Sadly no",
       "headcount": "How many of you?",
-      "dietary": "Anything you can't eat?",
       "song": "A song that will get you dancing",
       "message": "A note for us",
       "submit": "Send reply"
@@ -110,7 +184,11 @@
   },
 
   "contacts": [
-    { "name": "PLACEHOLDER NAME", "phone": "+61 000 000 000", "email": "hello@example.com" }
+    {
+      "name": "PLACEHOLDER NAME",
+      "phone": "+91 00000 00000",
+      "email": "hello@example.com"
+    }
   ],
 
   "theme": {

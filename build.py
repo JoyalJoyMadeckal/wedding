@@ -146,8 +146,10 @@ def process_photos(force: bool = False) -> list[dict]:
         })
 
     # sweep generated files whose original was removed
+    # (share.jpg and upi-qr.png aren't made from originals/ — leave them alone)
+    protected = {"share.jpg", "upi-qr.png"}
     for old in OUT.glob("*"):
-        if old.stem not in live_stems and old.name != "share.jpg":
+        if old.stem not in live_stems and old.name not in protected:
             old.unlink()
             print(f"  removed {old.name} (original gone)")
 
@@ -214,6 +216,58 @@ def patch_meta(data: dict) -> None:
 
 
 # ── qr ──────────────────────────────────────────────────────────
+def upi_link(gifts: dict) -> str:
+    """The upi://pay link, built from wedding.json the same way index.html does."""
+    from urllib.parse import urlencode
+
+    upi = (gifts or {}).get("upi", {})
+    if upi.get("link"):
+        return upi["link"]
+    if not upi.get("id"):
+        return ""
+    params = {"pa": upi["id"], "cu": "INR"}
+    if upi.get("name"):
+        params["pn"] = upi["name"]
+    if upi.get("note"):
+        params["tn"] = upi["note"]
+    return "upi://pay?" + urlencode(params)
+
+
+def make_upi_qr(gifts: dict, ink: str) -> None:
+    """photos/upi-qr.png — shown on desktop, where a tap-to-pay link is useless.
+
+    Generated from the UPI id, so it works with any UPI app rather than only
+    PhonePe, and can never drift out of sync with the link on the button.
+    """
+    target = OUT / "upi-qr.png"
+    link = upi_link(gifts)
+
+    if not link:
+        if target.exists():
+            try:
+                target.unlink()
+                print("  upi-qr.png removed — gifts.upi.id is empty")
+            except OSError:
+                # OneDrive or a viewer can hold the file open; harmless either
+                # way, since the gifts section is hidden while the id is blank
+                print("  upi-qr.png is stale but locked — delete it by hand if you like")
+        return
+
+    try:
+        import qrcode
+        from qrcode.constants import ERROR_CORRECT_M
+    except ImportError:
+        print('  upi-qr.png skipped — pip install "qrcode[pil]"')
+        return
+
+    OUT.mkdir(exist_ok=True)
+    qr = qrcode.QRCode(error_correction=ERROR_CORRECT_M, box_size=12, border=2)
+    qr.add_data(link)
+    qr.make(fit=True)
+    qr.make_image(fill_color=ink, back_color="white").save(target)
+    print(f"  upi-qr.png -> {(gifts.get('upi') or {}).get('id') or 'custom link'}")
+
+
 def make_qr(url: str, ink: str) -> None:
     if not url or "example.com" in url:
         print("  qr.png skipped — set a real site.url first")
@@ -241,8 +295,9 @@ def build(force: bool = False) -> None:
         sys.exit("Pillow is not installed. Run: pip install pillow")
     write_manifest(entries)
     patch_meta(data)
-    make_qr((data.get("site", {}).get("url") or "").rstrip("/"),
-            data.get("theme", {}).get("ink", "#22202B"))
+    ink = data.get("theme", {}).get("ink", "#22202B")
+    make_qr((data.get("site", {}).get("url") or "").rstrip("/"), ink)
+    make_upi_qr(data.get("gifts", {}), ink)
     if entries:
         counts: dict[str, int] = {}
         for e in entries:

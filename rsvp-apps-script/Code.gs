@@ -56,6 +56,7 @@ var PREFERRED_ORDER = [
   'submittedAt', 'name', 'email',
   'ring_attending', 'ring_guests',
   'wedding_attending', 'wedding_guests',
+  'reception_attending', 'reception_guests',
   'dietary', 'song', 'message'
 ];
 
