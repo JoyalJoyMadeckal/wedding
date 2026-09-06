@@ -155,7 +155,13 @@
     "copied": "Copied",
     "copyFailed": "Copy it from here",
     "copyHint": "If the QR won't scan, tap this and paste the UPI ID into your app.",
-    "footnote": "Any UPI app works — it doesn't have to be PhonePe."
+    "footnote": "Any UPI app works — it doesn't have to be PhonePe.",
+    "registry": {
+      "lead": "Or, if you'd rather send something for the house:",
+      "label": "Open our registry",
+      "url": "https://www.myregistry.com/wedding-registry/joyal-anjana-and-anjana-r-auburn-nsw/5618240",
+      "note": "Opens MyRegistry in a new tab."
+    }
   },
 
   "rsvp": {

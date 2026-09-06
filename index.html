@@ -335,6 +335,23 @@ legend{padding:0}
 }
 .gift-foot{font-size:.8125rem;color:var(--muted);margin:1rem 0 0}
 
+/* the other way to give — a registry, hosted elsewhere */
+.gift-alt{
+  margin-top:1.5rem;padding-top:1.4rem;
+  border-top:1px solid var(--hairline);
+}
+.gift-alt-lead{font-size:.9375rem;color:var(--muted);margin:0}
+.gift-reg{
+  display:inline-block;margin-top:.9rem;
+  font-family:var(--text);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--paper);border:1px solid var(--tan);border-radius:2px;
+  color:var(--tan-deep);padding:.7rem 1.4rem;text-decoration:none;
+}
+.gift-reg:hover{background:var(--paper-warm);border-color:var(--tan-deep)}
+.gift-reg:focus-visible{outline:2px solid var(--terracotta);outline-offset:2px}
+.gift-reg .ext{margin-left:.45rem;font-size:.9em}
+.gift-note{font-size:.8125rem;color:var(--muted);margin:.65rem 0 0}
+
 /* no touchscreen — they can't tap through to an app, so show the QR instead */
 @media (hover:hover) and (pointer:fine){
   .gift .btn{display:none}
@@ -531,13 +548,13 @@ function buildJump(fns, data) {
     const a = el("a", null, data.details.navLabel || "Good to know");
     a.href = "#details"; nav.append(a);
   }
-  if (giftsOn(data)) {
-    const a = el("a", null, data.gifts.navLabel || "Gifts");
-    a.href = "#gifts"; nav.append(a);
-  }
   if (data.rsvp) {
     const a = el("a", null, data.rsvp.navLabel || "RSVP");
     a.href = "#rsvp"; nav.append(a);
+  }
+  if (giftsOn(data)) {
+    const a = el("a", null, data.gifts.navLabel || "Gifts");
+    a.href = "#gifts"; nav.append(a);
   }
   return nav;
 }
@@ -726,6 +743,25 @@ function buildGifts(g) {
   }
 
   if (g.footnote) box.append(rich(el("p", "gift-foot"), g.footnote));
+
+  /* Registry lives on someone else's site, so it opens in a new tab rather
+     than navigating away from the invitation. */
+  const reg = g.registry || {};
+  if (reg.url) {
+    const alt = el("div", "gift-alt");
+    if (reg.lead) alt.append(rich(el("p", "gift-alt-lead"), reg.lead));
+
+    const a = el("a", "gift-reg", reg.label || "Open our registry");
+    a.href = reg.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.append(el("span", "ext", "↗"));
+    a.setAttribute("aria-label", (reg.label || "Open our registry") + " (opens in a new tab)");
+    alt.append(a);
+
+    if (reg.note) alt.append(rich(el("p", "gift-note"), reg.note));
+    box.append(alt);
+  }
 
   s.append(box);
   return s;
@@ -976,8 +1012,8 @@ function applyTheme(t) {
   inner.append(buildOpening(data, fns));
   fns.forEach(fn => inner.append(buildFunction(fn, allPhotos)));
   if (data.details) inner.append(buildDetails(data.details));
-  if (giftsOn(data)) inner.append(buildGifts(data.gifts));
   if (data.rsvp) inner.append(buildRsvp(data.rsvp, fns));
+  if (giftsOn(data)) inner.append(buildGifts(data.gifts));
   inner.append(buildFooter(data));
   detail.append(inner);
   app.append(detail);
