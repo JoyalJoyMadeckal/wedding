@@ -465,8 +465,9 @@ legend{padding:0}
 .foot a{text-underline-offset:.25em}
 .foot .mark{
   font-family:var(--display);font-size:1rem;
-  color:var(--ink);margin-top:.75rem;
+  color:var(--ink);margin:0 0 .15rem;
 }
+.foot .contact + .contact{margin-top:1.15rem}
 
 .boot{padding:5rem var(--pad);text-align:center;color:var(--muted);font-size:.9375rem}
 .boot code{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--terracotta-deep)}
@@ -646,13 +647,13 @@ function buildJump(fns, data) {
     a.href = "#" + slug(f.id || f.name);
     nav.append(a);
   });
-  if (data.details) {
-    const a = el("a", null, data.details.navLabel || "Good to know");
-    a.href = "#details"; nav.append(a);
-  }
   if (data.rsvp) {
     const a = el("a", null, data.rsvp.navLabel || "RSVP");
     a.href = "#rsvp"; nav.append(a);
+  }
+  if (data.details) {
+    const a = el("a", null, data.details.navLabel || "Good to know");
+    a.href = "#details"; nav.append(a);
   }
   if (giftsOn(data)) {
     const a = el("a", null, data.gifts.navLabel || "Gifts");
@@ -1198,13 +1199,23 @@ function wireForm(form, status, btn, r) {
 function buildFooter(data) {
   const f = el("footer", "foot");
   (data.contacts || []).forEach(c => {
+    const block = el("div", "contact");
+    // the name carries the display face the couple's sign-off used to
+    if (c.name) block.append(el("p", "mark", c.name));
+
+    /* One field can hold several numbers — an array, or separated by | , or /.
+       Each needs its own tel: link, or tapping dials both concatenated. */
+    const phones = Array.isArray(c.phone) ? c.phone
+                 : String(c.phone || "").split(/\s*[|,\/]\s*/);
     const bits = [];
-    if (c.name) bits.push(c.name);
-    if (c.phone) bits.push("[" + c.phone + "](tel:" + c.phone.replace(/[^\d+]/g, "") + ")");
+    phones.map(p => p.trim()).filter(Boolean).forEach(p => {
+      bits.push("[" + p + "](tel:" + p.replace(/[^\d+]/g, "") + ")");
+    });
     if (c.email) bits.push("[" + c.email + "](mailto:" + c.email + ")");
-    f.append(rich(el("p"), bits.join(" · ")));
+    if (bits.length) block.append(rich(el("p"), bits.join(" · ")));
+
+    f.append(block);
   });
-  f.append(el("p", "mark", data.couple.partnerOne + " & " + data.couple.partnerTwo));
   return f;
 }
 
@@ -1279,8 +1290,8 @@ function applyTheme(t) {
   const inner = el("div", "inner");
   inner.append(buildOpening(data, fns));
   fns.forEach(fn => inner.append(buildFunction(fn, allPhotos)));
-  if (data.details) inner.append(buildDetails(data.details));
   if (data.rsvp) inner.append(buildRsvp(data.rsvp, fns));
+  if (data.details) inner.append(buildDetails(data.details));
   if (giftsOn(data)) inner.append(buildGifts(data.gifts));
   inner.append(buildFooter(data));
   detail.append(inner);
