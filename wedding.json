@@ -169,7 +169,7 @@
     "mode": "gsheet",
     "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
-    "note": "We'll email you a confirmation. Change of plans? Just reply to that email.",
+    "note": "We'll email you a confirmation.",
     "labels": {
       "name": "Your name",
       "email": "Email",
@@ -207,14 +207,15 @@
     "copied": "Copied",
     "copyFailed": "Copy it from here",
     "copyHint": "If the QR won't scan, tap this and paste the UPI ID into your app.",
+    "copyHintMobile": "If the button doesn't open your UPI app, tap this and paste the ID in instead.",
     "footnote": "Thank you!"
   },
 
   "contacts": [
     {
-      "name": "PLACEHOLDER NAME",
-      "phone": "+91 00000 00000",
-      "email": "hello@example.com"
+      "name": "Joyal & Anjana",
+      "phone": "+91 79078 96626 | +61 466 121 222",
+      "email": "joyalwedsanjana@gmail.com"
     }
   ],
 

@@ -231,24 +231,34 @@ p:last-child{margin-bottom:0}
 .fn .arch{border-bottom:4px solid var(--accent,var(--terracotta))}
 
 /* ── shared details ─────────────────────────────────────── */
-.facts{margin:1.5rem 0 0;border-top:1px solid var(--hairline)}
-.facts>div{
-  display:grid;gap:.1rem .9rem;
-  padding:1.1rem 0;border-bottom:1px solid var(--hairline);
+/* Stacked at every width. These items hold images and lists now, so squeezing
+   them beside a label column made the phone layout cramped. Hierarchy comes
+   from type size instead: section > item > entry > field. */
+.facts{margin:1.75rem 0 0;border-top:1px solid var(--hairline)}
+.facts>div{padding:1.5rem 0;border-bottom:1px solid var(--hairline)}
+.facts dt{
+  font-family:var(--display);
+  font-size:clamp(1.22rem,4.4vw,1.4rem);
+  line-height:1.25;color:var(--ink);
+  margin:0 0 .75rem;
 }
-.facts dt{font-family:var(--display);font-size:1.0625rem;margin:0}
 .facts dd{margin:0;color:var(--muted);font-size:.9375rem}
-@media (min-width:30rem){
-  .facts>div{grid-template-columns:9.5rem 1fr}
-}
 
 /* ── dress code ─────────────────────────────────────────── */
-.wear + .wear{margin-top:1.5rem;padding-top:1.4rem;border-top:1px dashed var(--hairline)}
+.wear + .wear{margin-top:1.75rem;padding-top:1.6rem;border-top:1px dashed var(--hairline)}
 .wear-label{
-  font-family:var(--display);font-size:1rem;color:var(--ink);
-  margin:0 0 .45rem;line-height:1.3;
+  display:flex;gap:.55rem;align-items:baseline;
+  font-family:var(--display);
+  font-size:1.0625rem;line-height:1.3;color:var(--ink);
+  margin:0 0 .6rem;
 }
-.wear-line{margin:0 0 .2rem;font-size:.9375rem}
+.wear-num{
+  flex:0 0 auto;
+  font-family:var(--text);font-size:.8rem;font-weight:500;
+  letter-spacing:.04em;color:var(--tan-deep);
+}
+.wear-line{margin:0 0 .35rem;font-size:.9375rem}
+.wear-line:last-of-type{margin-bottom:0}
 .wear-k{
   display:block;
   font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
@@ -406,6 +416,12 @@ legend{padding:0}
 .gift-copy:hover{background:var(--paper-warm);border-color:var(--tan-deep)}
 .gift-copy:focus-visible{outline:2px solid var(--terracotta);outline-offset:2px}
 .gift-hint{font-size:.8125rem;color:var(--muted);margin:.65rem 0 0}
+/* phones never see the QR, so nothing there should mention scanning one */
+.only-desktop{display:none}
+@media (hover:hover) and (pointer:fine){
+  .only-desktop{display:block}
+  .only-touch{display:none}
+}
 /* only shown if the clipboard is unavailable — then they need to read it */
 .gift-reveal{
   margin:.7rem 0 0;font-family:ui-monospace,Menlo,Consolas,monospace;
@@ -758,7 +774,8 @@ function describe(dd, value) {
   if (value == null) return;
 
   if (Array.isArray(value)) {
-    value.forEach(entry => dd.append(buildWear(entry)));
+    // numbered once there's more than one, so the events read as a sequence
+    value.forEach((entry, i) => dd.append(buildWear(entry, value.length > 1 ? i + 1 : 0)));
     return;
   }
   if (typeof value === "object") {
@@ -785,9 +802,14 @@ function titleCase(k) {
 /* One event's dress code: the words first, then the artwork. The image is a
    button so it opens full-screen — at column width the palette labels baked
    into it are far too small to read. */
-function buildWear(entry) {
+function buildWear(entry, num) {
   const box = el("div", "wear");
-  if (entry.label) box.append(el("p", "wear-label", entry.label));
+  if (entry.label) {
+    const h = el("p", "wear-label");
+    if (num) h.append(el("span", "wear-num", num + "."));
+    h.append(el("span", null, entry.label));
+    box.append(h);
+  }
   if (entry.dresscode) {
     const p = el("p", "wear-line");
     p.append(el("span", "wear-k", "Dress code"));
@@ -957,7 +979,7 @@ function buildGifts(g) {
     qr.onerror = () => qr.remove();       // build.py hasn't generated it yet
     alt.append(qr);
 
-    if (g.qrCaption) alt.append(el("p", "gift-cap", g.qrCaption));
+    if (g.qrCaption) alt.append(el("p", "gift-cap only-desktop", g.qrCaption));
 
     /* The fallback for when the QR won't scan and the deep link doesn't fire
        (iOS is unreliable). The id itself stays off the page — it's only put on
@@ -993,7 +1015,9 @@ function buildGifts(g) {
       });
 
       alt.append(copy);
-      if (g.copyHint) alt.append(rich(el("p", "gift-hint"), g.copyHint));
+      // two wordings: the desktop one can mention the QR, the phone one can't
+      if (g.copyHint) alt.append(rich(el("p", "gift-hint only-desktop"), g.copyHint));
+      if (g.copyHintMobile) alt.append(rich(el("p", "gift-hint only-touch"), g.copyHintMobile));
     }
     box.append(alt);
   }
