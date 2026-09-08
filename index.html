@@ -340,16 +340,15 @@ p:last-child{margin-bottom:0}
   background:var(--paper-warm);border-radius:2px;
   border-left:4px solid var(--accent,var(--terracotta));
 }
-.rsvp-q{
-  margin-top:1.5rem;padding:1.15rem 1.25rem;
-  background:var(--paper-warm);border-radius:2px;
-  border-left:4px solid var(--tan);
-}
+/* A plain question, not an event — so no card, no accent bar. Reads like the
+   other form fields, just with radios instead of an input. */
+.rsvp-q{margin-top:1.6rem}
 .rsvp-q .q-label{
-  font-family:var(--display);font-size:1.05rem;line-height:1.3;
-  color:var(--ink);margin:0 0 .3rem;
+  font-size:.8125rem;letter-spacing:.03em;
+  color:var(--muted);margin:0 0 .2rem;
 }
-.rsvp-q .q-hint{font-size:.8125rem;color:var(--muted);margin:0 0 .85rem}
+.rsvp-q .q-hint{font-size:.8125rem;color:var(--muted);opacity:.8;margin:0 0 .6rem}
+.rsvp-q .choices{--accent:var(--tan);--accent-deep:var(--tan-deep)}
 
 .rsvp-fn h3{font-size:1.2rem;margin:0}
 .rsvp-fn .sub{font-size:.8125rem;color:var(--muted);margin:0 0 .85rem}
@@ -1106,7 +1105,12 @@ function buildRsvp(r, fns) {
     const lg = el("legend");
     lg.append(el("h3", null, fn.name));
     fs.append(lg);
-    fs.append(el("p", "sub", [fn.shortDate || fn.dateLabel, fn.venue].filter(Boolean).join(" · ")));
+    /* Events with several locations have no top-level venue, so fall back to
+       the last one listed — for the wedding that's the reception, which is
+       what the headcount is actually for. rsvpVenue overrides both. */
+    const last = (fn.venues || []).filter(v => v.venue).slice(-1)[0];
+    const where = fn.rsvpVenue || fn.venue || (last && last.venue);
+    fs.append(el("p", "sub", [fn.shortDate || fn.dateLabel, where].filter(Boolean).join(" · ")));
 
     const ch = el("div", "choices");
     [[L.yes || "Joyfully yes", "yes"], [L.no || "Sadly no", "no"]].forEach((pair, i) => {
