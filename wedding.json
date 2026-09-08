@@ -195,8 +195,8 @@
 
   "_gifts_readme": "Registry only. Blank 'url' and the whole Gifts section and its nav link disappear. To bring back a UPI option later, add an 'upi' object with an 'id' — index.html still supports it and build.py will regenerate the QR.",
   "gifts": {
-    "title": "Gifts",
-    "navLabel": "Gifts",
+    "title": "Registry",
+    "navLabel": "Registry",
     "intro": "Honestly, your presence, love and blessings are all we could ask for — gifts are absolutely not expected!",
     "body": "But if you're the kind who insists on bringing something anyway, we've put together a little registry, just to make sure whatever you choose is something we'll truly love, use and cherish.",
     "url": "https://www.myregistry.com/wedding-registry/joyal-anjana-and-anjana-r-auburn-nsw/5618240",

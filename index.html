@@ -342,12 +342,13 @@ p:last-child{margin-bottom:0}
 }
 /* A plain question, not an event — so no card, no accent bar. Reads like the
    other form fields, just with radios instead of an input. */
-.rsvp-q{margin-top:1.6rem}
+.rsvp-q{margin-top:1.75rem}
 .rsvp-q .q-label{
-  font-size:.8125rem;letter-spacing:.03em;
-  color:var(--muted);margin:0 0 .2rem;
+  display:block;
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tan-deep);margin:0 0 .3rem;
 }
-.rsvp-q .q-hint{font-size:.8125rem;color:var(--muted);opacity:.8;margin:0 0 .6rem}
+.rsvp-q .q-hint{font-size:.875rem;color:var(--muted);margin:0 0 .7rem;max-width:44ch}
 .rsvp-q .choices{--accent:var(--tan);--accent-deep:var(--tan-deep)}
 
 .rsvp-fn h3{font-size:1.2rem;margin:0}
@@ -368,26 +369,48 @@ p:last-child{margin-bottom:0}
 }
 .choice:has(input:focus-visible){outline:2px solid var(--terracotta);outline-offset:2px}
 
-.headcount{margin-top:.75rem;display:flex;align-items:center;gap:.75rem}
-.headcount label{font-size:.8125rem;color:var(--muted);margin:0}
-.headcount input{width:4.5rem}
+/* Question on the left, the number box pinned right. The label is a full
+   sentence, so it takes the slack and wraps; the box never moves. */
+.headcount{
+  margin-top:1rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.headcount label{
+  flex:1 1 auto;min-width:0;margin:0;
+  font-size:.8125rem;color:var(--muted);
+}
+/* [type=number] is needed here — the shared input rule below sets width:100%
+   at the same specificity and would otherwise win on source order. */
+.headcount input[type=number]{
+  flex:0 0 auto;width:4.75rem;
+  padding:.65rem .5rem;text-align:center;
+}
 
-.field{margin-top:1.35rem}
-.field label,.headcount label{display:block}
+/* Everything outside the event cards used to be hairline-thin next to them.
+   Boxed fields and small-caps labels give the form equal weight, and match
+   the label treatment used in the dress code and travel lists. */
+.field{margin-top:1.5rem}
 .field label{
-  font-size:.8125rem;letter-spacing:.03em;
-  color:var(--muted);margin-bottom:.35rem;
+  display:block;
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tan-deep);margin-bottom:.45rem;
 }
 input[type=text],input[type=email],input[type=number],textarea{
   width:100%;font-family:var(--text);font-size:1rem;font-weight:300;
-  color:var(--ink);background:transparent;border:0;
-  border-bottom:1px solid var(--hairline);padding:.5rem 0;border-radius:0;
+  color:var(--ink);
+  background:var(--paper-warm);
+  border:1px solid var(--hairline);border-radius:2px;
+  padding:.8rem .9rem;
 }
-textarea{min-height:5rem;resize:vertical}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.6}
+textarea{min-height:6rem;resize:vertical}
 input:focus-visible,textarea:focus-visible{
-  outline:none;border-bottom-color:var(--terracotta);
-  box-shadow:0 1px 0 var(--terracotta);
+  outline:none;
+  background:var(--paper);
+  border-color:var(--terracotta);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--terracotta) 15%,transparent);
 }
+input[type=number]:disabled{opacity:.5}
 fieldset{border:0;padding:0;margin:0}
 legend{padding:0}
 
@@ -462,8 +485,25 @@ legend{padding:0}
   .gift-qr{display:block}
 }
 
+/* The submit button was a small pill at the end of a long form — full width
+   on a phone so it reads as the end of the journey. */
+#rsvpForm .btn{
+  display:block;width:100%;margin-top:2.25rem;
+  font-size:.8rem;letter-spacing:.2em;padding:1.15rem 2rem;
+}
+@media (min-width:34rem){
+  #rsvpForm .btn{display:inline-block;width:auto}
+}
+
 .formnote{margin-top:.9rem;font-size:.8125rem;color:var(--muted)}
-.formstatus{margin-top:.9rem;font-size:.9375rem;color:var(--terracotta-deep);min-height:1.5em}
+.formstatus{
+  margin-top:1rem;font-size:.9375rem;
+  color:var(--terracotta-deep);min-height:1.5em;
+}
+.formstatus:not(:empty){
+  padding:.8rem .9rem;border-radius:2px;
+  background:var(--paper-warm);border-left:3px solid var(--tan);
+}
 .honeypot{position:absolute;left:-9999px}
 
 /* ── footer ─────────────────────────────────────────────── */
