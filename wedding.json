@@ -166,6 +166,16 @@
     "navLabel": "RSVP",
     "intro": "Please RSVP for each event separately — you’re welcome to be part of as many celebrations as you can make.\n\nDo let us know by **26th September 2026**, so we have enough time to make your visit as comfortable and special as possible.",
     "maxGuests": 4,
+    "questions": [
+      {
+        "id": "stay_oct31",
+        "label": "Will you need a place to stay on the night of 31st October?",
+        "hint": "Between the ring exchange and the wedding the next morning — we're arranging rooms near the venues.",
+        "yes": "Yes please",
+        "no": "No, thank you",
+        "required": false
+      }
+    ],
     "mode": "gsheet",
     "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",

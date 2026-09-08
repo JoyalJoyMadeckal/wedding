@@ -48,8 +48,13 @@ var META_COLUMNS = ['_key', 'replies', 'firstReplied'];
 var ALLOWED_FIELDS = [
   'submittedAt', 'name', 'email', 'dietary', 'song', 'message'
 ];
-// ...plus anything matching these, so new events in wedding.json just work.
-var ALLOWED_PATTERNS = [/^[a-z0-9-]{1,24}_attending$/, /^[a-z0-9-]{1,24}_guests$/];
+// ...plus anything matching these, so new events and new questions in
+// wedding.json just work without editing this file.
+var ALLOWED_PATTERNS = [
+  /^[a-z0-9-]{1,24}_attending$/,
+  /^[a-z0-9-]{1,24}_guests$/,
+  /^q_[a-z0-9_]{1,32}$/          // rsvp.questions entries
+];
 
 // Fields appear in this order; anything else is appended after.
 var PREFERRED_ORDER = [
@@ -57,6 +62,7 @@ var PREFERRED_ORDER = [
   'ring_attending', 'ring_guests',
   'wedding_attending', 'wedding_guests',
   'reception_attending', 'reception_guests',
+  'q_stay_oct31',
   'dietary', 'song', 'message'
 ];
 
@@ -86,6 +92,12 @@ var EVENT_LABELS = {
   ring: 'Ring Exchange Ceremony',
   wedding: 'Wedding Ceremony',
   reception: 'Post Wedding Reception'
+};
+
+// Same idea for the extra yes/no questions in rsvp.questions, so the
+// confirmation email reads properly rather than echoing the field name.
+var QUESTION_LABELS = {
+  q_stay_oct31: 'Room for the night of 31 Oct'
 };
 
 
@@ -366,6 +378,19 @@ function summarise_(data) {
                   : 'Not this time'
     });
   });
+
+  // then the extra yes/no questions, skipping any left unanswered
+  Object.keys(data).forEach(function (key) {
+    if (key.indexOf('q_') !== 0) return;
+    var v = String(data[key]).toLowerCase();
+    if (v !== 'yes' && v !== 'no') return;
+    lines.push({
+      label: QUESTION_LABELS[key] || titleCase_(key.slice(2)),
+      going: v === 'yes',
+      text: v === 'yes' ? 'Yes please' : 'Not needed'
+    });
+  });
+
   return lines;
 }
 

@@ -340,6 +340,17 @@ p:last-child{margin-bottom:0}
   background:var(--paper-warm);border-radius:2px;
   border-left:4px solid var(--accent,var(--terracotta));
 }
+.rsvp-q{
+  margin-top:1.5rem;padding:1.15rem 1.25rem;
+  background:var(--paper-warm);border-radius:2px;
+  border-left:4px solid var(--tan);
+}
+.rsvp-q .q-label{
+  font-family:var(--display);font-size:1.05rem;line-height:1.3;
+  color:var(--ink);margin:0 0 .3rem;
+}
+.rsvp-q .q-hint{font-size:.8125rem;color:var(--muted);margin:0 0 .85rem}
+
 .rsvp-fn h3{font-size:1.2rem;margin:0}
 .rsvp-fn .sub{font-size:.8125rem;color:var(--muted);margin:0 0 .85rem}
 
@@ -1060,6 +1071,29 @@ function buildRsvp(r, fns) {
     return f;
   };
 
+  /* Extra yes/no questions, defined in rsvp.questions. Field names are
+     prefixed "q_" so the Apps Script can allow them without opening the
+     column allowlist to anything a stranger cares to invent. */
+  const askQuestion = q => {
+    const box = el("div", "rsvp-q");
+    const name = "q_" + slug(q.id).replace(/-/g, "_");
+
+    box.append(rich(el("p", "q-label"), q.label));
+    if (q.hint) box.append(rich(el("p", "q-hint"), q.hint));
+
+    const ch = el("div", "choices");
+    [[q.yes || "Yes please", "yes"], [q.no || "No, thank you", "no"]].forEach((pair, i) => {
+      const lab = el("label", "choice");
+      const inp = el("input");
+      inp.type = "radio"; inp.name = name; inp.value = pair[1];
+      inp.required = !!q.required && i === 0;
+      lab.append(inp, document.createTextNode(" " + pair[0]));
+      ch.append(lab);
+    });
+    box.append(ch);
+    return box;
+  };
+
   form.append(textField("gName", "name", L.name || "Your name", "text", true, { autocomplete: "name" }));
   form.append(textField("gEmail", "email", L.email || "Email", "email", true, { autocomplete: "email" }));
 
@@ -1112,6 +1146,8 @@ function buildRsvp(r, fns) {
     block.append(fs);
     form.append(block);
   });
+
+  (r.questions || []).forEach(q => { if (q && q.id && q.label) form.append(askQuestion(q)); });
 
   /* These three are optional. Delete a label from rsvp.labels in wedding.json
      and the field disappears from the form. */
