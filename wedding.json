@@ -167,7 +167,7 @@
       {
         "id": "stay_oct31",
         "label": "Will you need a place to stay on the night of 31st October?",
-        "hint": "Between the ring exchange and the wedding the next morning — we're arranging rooms near the venues.",
+        "hint": "",
         "yes": "Yes please",
         "no": "No, thank you",
         "required": false
