@@ -106,8 +106,8 @@
   ],
 
   "details": {
-    "title": "Sorted, so you don't have to ask",
-    "navLabel": "Sorted",
+    "title": "A Few Handy Details",
+    "navLabel": "FYI",
     "intro": "We thought of it so you wouldn't have to.",
     "items": [
       {
@@ -115,7 +115,7 @@
         "description": [
           {
             "label": "Ring Exchange & Pre-wedding Party",
-            "dresscode": "Indian Traditional",
+            "dresscode": "Indian Traditional (Comfy enough for the lawn, dance-floor ready for later!)",
             "colortheme": "Soft Pastels: White, Pink, Green & Gold",
             "image": "photos/dresscode-ring.jpg",
             "imageWebp": "photos/dresscode-ring.webp",
@@ -147,7 +147,7 @@
       },
       {
         "term": "Where to stay",
-        "description": "We're arranging places to stay close to the venues, so that nobody has to travel far at the end of a long and happy day. Once RSVPs close on **26th September 2026** we'll know our numbers — and the details will appear right here."
+        "description": "We're arranging places to stay close to the venues, so that nobody has to travel far at the end of a long and happy day.\n\nOnce RSVPs close on **26th September 2026** we'll know our numbers — and the details will appear right here."
       },
       {
         "term": "Photos",
@@ -164,12 +164,11 @@
   "rsvp": {
     "title": "Will you be joining us?",
     "navLabel": "RSVP",
-    "intro": "Please RSVP for each event separately — you’re welcome to be part of as many celebrations as you can make. We’d be grateful if you could let us know by **26th September 2026**, so we have enough time to make your visit as comfortable and special as possible. One RSVP per household is all you need.",
+    "intro": "Please RSVP for each event separately — you’re welcome to be part of as many celebrations as you can make.\n\nDo let us know by **26th September 2026**, so we have enough time to make your visit as comfortable and special as possible.",
     "maxGuests": 4,
     "mode": "gsheet",
     "sheetEndpoint": "https://script.google.com/macros/s/AKfycbz4LxxQDa0r37P_Dso0K1olG2hB8upqYeO-VZOI52oS1VRZ0GtdQ2vYPi-WlpBQ73hQyQ/exec",
     "formspreeEndpoint": "https://formspree.io/f/PLACEHOLDER",
-    "note": "We'll email you a confirmation.",
     "labels": {
       "name": "Your name",
       "email": "Email",
